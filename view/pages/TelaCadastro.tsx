@@ -5,8 +5,9 @@ import { cadastrarFuncionarioController } from "../../controller/funcionarioCont
 import { NavigationProp } from "@react-navigation/native";
 
 //provisório
-import './TelaLogin.Styles'
-import TelaLoginStyles from "./TelaLogin.Styles";
+import './TelaLoginStyles'
+import TelaLoginStyles from "./TelaLoginStyles";
+import GlobalStyles from "./GlobalStyles";
 
 
 
@@ -28,7 +29,7 @@ const Cadastro: React.FC<Props> = ({ navigation }) => {
         
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-          <View style={TelaLoginStyles.container}>
+          <View style={GlobalStyles.container}>
             <Text
               style={TelaLoginStyles.textoTitulo}
               >PontoFácil!</Text>
@@ -83,17 +84,17 @@ const Cadastro: React.FC<Props> = ({ navigation }) => {
             />
 
             <TouchableOpacity
-              style={TelaLoginStyles.botao}
+              style={GlobalStyles.botao}
               onPress={() => cadastrarFuncionarioController(parseInt(cpf), usuario, cargo, parseFloat(salario), senha)}
             >
-              <Text style={TelaLoginStyles.textoBotao}>CADASTRAR</Text>
+              <Text style={GlobalStyles.textoBotao}>Cadastrar</Text>
             </TouchableOpacity>
             <TouchableOpacity
-            style={TelaLoginStyles.botaoLink}
+            style={GlobalStyles.botaoLink}
             onPress={() => navigation.navigate('Login')}
             >
               <Text
-              style={TelaLoginStyles.textLink}
+              style={GlobalStyles.textLink}
               >
                 Ja possui cadastro? Clique aqui!
               </Text>

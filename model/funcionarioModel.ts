@@ -19,3 +19,13 @@ export const getDadosLogin = async (cpf: number) => {
 
     return {data, error}
 }
+
+export const getDadosModel = async (idFunc: number) => {
+    const { data, error } = await supabaseConnection
+    .from('func')
+    .select('*')
+    .eq('id', idFunc)
+    .single()
+
+    return {data, error}
+}

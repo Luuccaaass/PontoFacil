@@ -1,8 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, Alert, Image, TouchableOpacity, KeyboardAvoidingView, Platform} from 'react-native';
-import './TelaLogin.Styles';
-import TelaLoginStyles from './TelaLogin.Styles';
+import './TelaLoginStyles';
+import TelaLoginStyles from './TelaLoginStyles';
+import GlobalStyles from './GlobalStyles';
 import { validarFuncionario } from '../../controller/funcionarioControler';
 import { NavigationProp } from '@react-navigation/native';
 
@@ -20,7 +21,7 @@ const Login:React.FC<Props> = ({ navigation }) =>{
   
   return (
     <View  
-    style= {TelaLoginStyles.container}>
+    style= {GlobalStyles.container}>
       <Text
       style={TelaLoginStyles.textoTitulo}
       >PontoFácil!</Text>
@@ -36,6 +37,7 @@ const Login:React.FC<Props> = ({ navigation }) =>{
       >
         <TextInput 
         placeholder='CPF'
+        keyboardType='numeric'
         style={TelaLoginStyles.textInput}
         onChangeText={(text) => setCpf(text)}
         value={cpf}
@@ -45,6 +47,7 @@ const Login:React.FC<Props> = ({ navigation }) =>{
 
         <TextInput 
         placeholder='Senha'
+        secureTextEntry={true}
         style={TelaLoginStyles.textInput}
         onChangeText={(text) => setSenha(text)}
         value={senha}
@@ -52,18 +55,18 @@ const Login:React.FC<Props> = ({ navigation }) =>{
         </TextInput>
 
         <TouchableOpacity
-        style={TelaLoginStyles.botao}
+        style={GlobalStyles.botao}
         onPress={() => validarFuncionario(parseInt(cpf), senha, navigation)}
         >
-          <Text style={TelaLoginStyles.textoBotao}>Entrar</Text>
+          <Text style={GlobalStyles.textoBotao}>Entrar</Text>
 
         </TouchableOpacity>
         <TouchableOpacity
-        style={TelaLoginStyles.botaoLink}
+        style={GlobalStyles.botaoLink}
         onPress={() => navigation.navigate('Cadastro')}
         >
           <Text
-          style={TelaLoginStyles.textLink}
+          style={GlobalStyles.textLink}
           >
             Ainda não possui uma conta? Cadastre-se aqui!
           </Text>

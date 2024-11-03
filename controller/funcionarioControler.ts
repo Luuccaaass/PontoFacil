@@ -1,6 +1,7 @@
 import { Alert } from 'react-native';
-import { cadastrarFuncionarioModel, getDadosLogin } from '../model/funcionarioModel';
-import { useNavigation, NavigationProp} from '@react-navigation/native';
+import { cadastrarFuncionarioModel, getDadosModel, getDadosLogin } from '../model/funcionarioModel';
+import { useState } from 'react';
+// import { useNavigation, NavigationProp} from '@react-navigation/native';
 
 
 
@@ -27,7 +28,6 @@ export const validarFuncionario = async(cpf:number, senha:string, navigation:any
         const {data, error} = await (getDadosLogin(cpf));
         if (data){
             if (data.senha == senha){
-                Alert.alert(`Entrou!`, `Usuario ID: ${data.id}`);
                 navigation.navigate('Painel', { id: data.id });
             }
             else{
@@ -35,13 +35,49 @@ export const validarFuncionario = async(cpf:number, senha:string, navigation:any
             }
         }
         else{
-            Alert.alert('Funcionário não cadastrado! ');
+            Alert.alert('Funcionário não cadastrado!');
         }
     }
     catch(error){
 
     }
-
-
-
 }
+
+//função para solicitar todos os dados do funcionário
+// export const getDadosFuncionario = async(id:number) => {
+//     const [dados, setDados] = useState({});
+//     try {
+//         const { data, error } = await (getDadosModel(id))
+//         if (data){
+//             setDados(data);
+//             return {dados};
+//         }
+//         else{
+//             Alert.alert("Erro", `{error}`);
+//         }
+//     }
+//     catch{
+        
+//     }
+//     return {dados}
+// }
+
+
+//função para solicitar os dados do funcionário para a camada model
+export const getDadosFuncionario = async (id: number) => {
+    try {
+        const { data, error } = await getDadosModel(id);
+        
+        if (error) {
+            Alert.alert(`Erro ao buscar funcionario`);
+            return null; // Retorne `null` ou uma estrutura apropriada em caso de erro
+        }
+        else{
+            return(data);
+        }
+
+    } catch (err) {
+        console.error("Erro inesperado:", err);
+        return null;
+    }
+};
