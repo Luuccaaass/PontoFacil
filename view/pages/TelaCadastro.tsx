@@ -3,19 +3,20 @@ import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, Image} from 'react-native';
 import { cadastrarFuncionarioController } from "../../controller/funcionarioControler";
 import { NavigationProp } from "@react-navigation/native";
+import { PropsScreenApps } from "../../controller/Interfaces";
 
 //provisório
-import './TelaLoginStyles'
-import TelaLoginStyles from "./TelaLoginStyles";
-import GlobalStyles from "./GlobalStyles";
+import '../styles/TelaLoginStyles'
+import TelaLoginStyles from "../styles/TelaLoginStyles";
+import GlobalStyles from "../styles/GlobalStyles";
 
 
 
-type Props = {
-  navigation: NavigationProp<any>;
-}
+// type Props = {
+//   navigation: NavigationProp<any>;
+// }
 
-const Cadastro: React.FC<Props> = ({ navigation }) => {
+const Cadastro = ({ navigation }:PropsScreenApps<'Cadastro'>) => {
     //criação das variáveis const para armazenar os valores que serão inseridos no banco
     const [cpf, setCpf] = useState("");
     const [usuario, setUsuario] = useState("");
@@ -85,7 +86,7 @@ const Cadastro: React.FC<Props> = ({ navigation }) => {
 
             <TouchableOpacity
               style={GlobalStyles.botao}
-              onPress={() => cadastrarFuncionarioController(parseInt(cpf), usuario, cargo, parseFloat(salario), senha)}
+              onPress={() => cadastrarFuncionarioController(parseInt(cpf), usuario, cargo, parseFloat(salario), senha, navigation)}
             >
               <Text style={GlobalStyles.textoBotao}>Cadastrar</Text>
             </TouchableOpacity>

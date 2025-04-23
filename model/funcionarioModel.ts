@@ -29,3 +29,12 @@ export const getDadosModel = async (idFunc: number) => {
 
     return {data, error}
 }
+
+export const getPontos = async (idFunc: number) => {
+    const { data, error } = await supabaseConnection
+    .from('registro_pontos')
+    .select('*')
+    .eq('func_id', idFunc)
+
+    return{ data, error }
+}

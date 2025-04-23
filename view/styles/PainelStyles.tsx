@@ -21,7 +21,7 @@ export default StyleSheet.create({
         height:200,
         alignItems:'center',
         justifyContent:'flex-start',
-        padding:30,
+        padding:20,
     },
 
     iconeFuncionario:{
@@ -42,4 +42,37 @@ export default StyleSheet.create({
         marginTop:70,
     },
 
+
+    boxPontosView:{
+        backgroundColor:cinzaApp,
+        height:'100%',
+        width:'100%',
+        padding:20,
+    },
+
+
+    boxPonto:{
+
+        height:80,
+        width:'100%',
+        borderBottomColor:'black',
+        borderBottomWidth:2,
+    },
+
+    linhaPontos:{
+        flexDirection:'row',
+        height:'70%',
+        alignItems:'center',
+        justifyContent:'space-between',
+        paddingHorizontal:20,
+    },
+
+    preenchimentoHorarioPonto:{
+        height:'80%',
+        width:'20%',
+        justifyContent:'center',
+        alignItems:'center',
+        backgroundColor:laranjaApp,
+        borderRadius:8,
+    },
 })

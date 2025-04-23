@@ -1,11 +1,12 @@
 import React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, Alert, Image, TouchableOpacity, KeyboardAvoidingView, Platform} from 'react-native';
-import './TelaLoginStyles';
-import TelaLoginStyles from './TelaLoginStyles';
-import GlobalStyles from './GlobalStyles';
+import '../styles/TelaLoginStyles';
+import TelaLoginStyles from '../styles/TelaLoginStyles';
+import GlobalStyles from '../styles/GlobalStyles';
 import { validarFuncionario } from '../../controller/funcionarioControler';
 import { NavigationProp } from '@react-navigation/native';
+import { PropsScreenApps } from '../../controller/Interfaces';
 
 type Props={
   navigation: NavigationProp<any>;
@@ -13,7 +14,7 @@ type Props={
 }
 
 
-const Login:React.FC<Props> = ({ navigation }) =>{
+const Login = ({ navigation }:PropsScreenApps<'Login'>) =>{
   const [cpf, setCpf] = useState('');
   const [senha, setSenha] = useState('');
 

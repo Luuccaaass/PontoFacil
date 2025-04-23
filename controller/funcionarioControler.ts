@@ -2,10 +2,12 @@ import { Alert } from 'react-native';
 import { cadastrarFuncionarioModel, getDadosModel, getDadosLogin } from '../model/funcionarioModel';
 import { useState } from 'react';
 // import { useNavigation, NavigationProp} from '@react-navigation/native';
+import { NavigationProp } from "@react-navigation/native";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 
 
-export const cadastrarFuncionarioController = async(cpf: number, nome:string, cargo:string, salario:number, senha:string) => {
+export const cadastrarFuncionarioController = async(cpf: number, nome:string, cargo:string, salario:number, senha:string, navigation:any) => {
     try {
         const { data, error } = await cadastrarFuncionarioModel(cpf, nome, cargo, salario, senha);
 
@@ -14,6 +16,7 @@ export const cadastrarFuncionarioController = async(cpf: number, nome:string, ca
         }
         else{
             Alert.alert("Sucesso", "Funcionário cadastrado com sucesso!");
+            navigation.navigate('Login')
         }
     }
     catch (error){
@@ -42,25 +45,6 @@ export const validarFuncionario = async(cpf:number, senha:string, navigation:any
 
     }
 }
-
-//função para solicitar todos os dados do funcionário
-// export const getDadosFuncionario = async(id:number) => {
-//     const [dados, setDados] = useState({});
-//     try {
-//         const { data, error } = await (getDadosModel(id))
-//         if (data){
-//             setDados(data);
-//             return {dados};
-//         }
-//         else{
-//             Alert.alert("Erro", `{error}`);
-//         }
-//     }
-//     catch{
-        
-//     }
-//     return {dados}
-// }
 
 
 //função para solicitar os dados do funcionário para a camada model
