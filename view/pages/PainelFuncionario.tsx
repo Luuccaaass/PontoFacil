@@ -6,26 +6,46 @@ import GlobalStyles from "../styles/GlobalStyles";
 import PainelStyles from "../styles/PainelStyles";
 import { getDadosFuncionario } from "../../controller/funcionarioControler";
 import { PropsScreenApps } from "../../controller/Interfaces";
+import { getDeviceLocation } from "controller/funcaoValidadoraCoordenada";
+import { setShouldAnimateExitingForTag } from "react-native-reanimated/lib/typescript/core";
 
 
 
 
 const PainelFuncionario = ({ navigation, route }: PropsScreenApps<'Painel'>) =>{
+    type Coordenadas = {
+        latitude: string,
+        longitude: string
+    } | null;
+
     const id = route.params.id;
     const [dados, setDados] = useState<any>(null);
+    const [localizacao, setLocalizacao] = useState  <Coordenadas>(null);
 
     useEffect(() => {
         const buscarDados = async () => {
             const resposta = await getDadosFuncionario(id);
+            const coords = await getDeviceLocation();
+            if (coords){
+                setLocalizacao({
+                    latitude: coords.latitude.toFixed(4),
+                    longitude: coords.longitude.toFixed(4)
+                });
+                console.log(coords)
+            }
+            else{
+                console.log('Nao foi possivel obter a localizacao')
+            }
             if (resposta) {
                 setDados(resposta);
             } else {
                 Alert.alert("Erro ao buscar dados do funcionário!");
             }
         };
-
         buscarDados();
+    
     }, [id]);
+    
 
     return (
         <View style={[GlobalStyles.container, { padding: 0 }]}>
@@ -48,7 +68,15 @@ const PainelFuncionario = ({ navigation, route }: PropsScreenApps<'Painel'>) =>{
                     onPress={()=>navigation.navigate('RegistroPonto')}
                     
                 >
-                    <Text style={GlobalStyles.textoBotao}>Registrar Ponto</Text>
+                    <Text style={GlobalStyles.textoBotao}>Registrar ponto</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={GlobalStyles.botao}
+                    onPress={()=> Alert.alert('A', `${localizacao?.latitude} + ${localizacao?.longitude}`)
+                }
+                    
+                >
+                    <Text style={GlobalStyles.textoBotao}>Obter localizacao</Text>
                 </TouchableOpacity>
             </View>
         </View>

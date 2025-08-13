@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Alert, StyleSheet, View, Text, Vibration} from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { validaCoordenada, getDeviceLocation} from 'controller/funcaoValidadoraCoordenada';
+import { PropsScreenApps } from "../../controller/Interfaces";
 
-export default function QRCodeScanner() {
+const QRCodeScanner = ({ navigation, route }: PropsScreenApps<'RegistroPonto'>) => {
   const [facing, setFacing] = useState<'front' | 'back'>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
@@ -53,7 +54,7 @@ export default function QRCodeScanner() {
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -68,3 +69,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+export default QRCodeScanner;
