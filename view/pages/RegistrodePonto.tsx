@@ -3,29 +3,35 @@ import { Alert, StyleSheet, View, Text, Vibration} from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { validaCoordenada, getDeviceLocation} from 'controller/funcaoValidadoraCoordenada';
 import { PropsScreenApps } from "../../controller/Interfaces";
+import { getDistanceBetween } from 'controller/funcaoValidadoraCoordenada';
 
 const QRCodeScanner = ({ navigation, route }: PropsScreenApps<'RegistroPonto'>) => {
+
+  
   const [facing, setFacing] = useState<'front' | 'back'>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const [leitura, setLeitura] = useState<string | null>(null);
+  const latitude = route.params.latitude;
+  const longitude = route.params.longitude;
+
+
 
   useEffect(() => {
     requestPermission();
   }, []);
 
+  //funcao que le o qr code
   const handleBarCodeScanned = ({ data }: { data: string }) => {
-    //const getDeviceLocation = await getDeviceLocation();
     setScanned(true);
     setLeitura(data);
     Alert.alert(
       "QR Code Lido!",
-      `${validaCoordenada(data) ? "Sim" : "Nao"}`,
+      `${validaCoordenada(data) ? "Sim" : "O QR Code lido não apresenta um ponto válido!"}`,
       [
         {
-          text: "OK",
           onPress: () => setScanned(false), // Permite nova leitura
-        },
+        }
       ]
     );
   };
