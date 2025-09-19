@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, StyleSheet, View, Text, Vibration} from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { validaCoordenada, getDeviceLocation} from 'controller/funcaoValidadoraCoordenada';
+import { validaCoordenada, getDeviceLocation, splitCoord} from 'controller/funcaoValidadoraCoordenada';
 import { PropsScreenApps } from "../../controller/Interfaces";
 import { getDistanceBetween } from 'controller/funcaoValidadoraCoordenada';
 
@@ -25,15 +25,34 @@ const QRCodeScanner = ({ navigation, route }: PropsScreenApps<'RegistroPonto'>) 
   const handleBarCodeScanned = ({ data }: { data: string }) => {
     setScanned(true);
     setLeitura(data);
-    Alert.alert(
-      "QR Code Lido!",
-      `${validaCoordenada(data) ? "Sim" : "O QR Code lido não apresenta um ponto válido!"}`,
+
+    /*
+*/
+    
+    
+    const coordenadaLida = splitCoord(data);
+    if (coordenadaLida != null){
+      const distance = getDistanceBetween(latitude, longitude, coordenadaLida?.latitude, coordenadaLida?.longitude)
+      Alert.alert(
+        `Coordenada lida`, `Distancia de voce: ${distance}`,
+      [
+        {
+          onPress: () => setScanned(false), // Permite nova leitura
+        }
+      ]
+      );
+    }
+    else{
+      Alert.alert(
+      `QR Code invalido!`,
+      `O QR Code lido nao e validos`,
       [
         {
           onPress: () => setScanned(false), // Permite nova leitura
         }
       ]
     );
+    }
   };
 
   if (!permission) {

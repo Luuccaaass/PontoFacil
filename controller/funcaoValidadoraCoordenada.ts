@@ -1,7 +1,7 @@
 import { Text, Alert } from "react-native"
 import * as Location from 'expo-location'
 import { ColorProperties } from "react-native-reanimated/lib/typescript/Colors";
-
+const maxDistanceAccepted = 10;
 
 function toRadians (degrees:number): number {
     return degrees * (Math.PI/180);
@@ -24,8 +24,7 @@ export const splitCoord = (valor:string) => {
     else{
       return{
         latitude: latitude,
-        longitude: longitude
-      }
+        longitude: longitude      }
     }
 };
 
@@ -48,7 +47,9 @@ export const validaCoordenada = (valorLido: string): boolean => {
     
 
 
+export default recordCheckPoint = (latitude: number, longitude:number) => {
 
+}
 
 
 
@@ -104,6 +105,6 @@ export const getDistanceBetween = (latA: number, longA: number, latB: number, lo
   
   // Distância = Raio × Ângulo Central
   const d = r * c;
-  
-  return d; // Retorna a distância calculada
+  console.log(`Distancia entre: \n ${latA} \n ${longA} \n ${latB} \n ${longB}`)
+  return d.toFixed(4); // Retorna a distância calculada
 };
