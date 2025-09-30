@@ -1,7 +1,15 @@
 import { Text, Alert } from "react-native"
 import * as Location from 'expo-location'
 import { ColorProperties } from "react-native-reanimated/lib/typescript/Colors";
+import { getDataPonto, registrarPonto } from "model/registroPontoModel";
+import { registerLoggerConfig } from "react-native-reanimated/lib/typescript/logger";
 const maxDistanceAccepted = 10;
+
+type local_ponto = {
+  latitude: number;
+  longitude: number;
+  id: number;
+}
 
 function toRadians (degrees:number): number {
     return degrees * (Math.PI/180);
@@ -10,45 +18,107 @@ function toRadians (degrees:number): number {
 
 
 
-export const splitCoord = (valor:string) => {
-    const partes = valor.trim().split(/\s*,\s*/);
-    if (partes.length != 2) {
-      return null;
-    }
-    const latitude = parseFloat(partes[0]);
-    const longitude = parseFloat(partes[1]);
-    // Verifica se a conversão para número foi bem-sucedida
-    if (isNaN(latitude) || isNaN(longitude)) {
+export const splitCoord = (valor: string): local_ponto | null => {
+    // Remove espaços no início/fim e divide apenas por vírgula (sem espaços opcionais)
+    const partes = valor.trim().split(',');
+    
+    // Esperamos exatamente 3 partes
+    if (partes.length !== 3) {
         return null;
     }
-    else{
-      return{
-        latitude: latitude,
-        longitude: longitude      }
+
+    const latitude = parseFloat(partes[0]);
+    const longitude = parseFloat(partes[1]);
+    const id = parseInt(partes[2], 10);
+
+    // Verifica se todas as conversões foram bem-sucedidas
+    if (isNaN(latitude) || isNaN(longitude) || isNaN(id)) {
+        return null;
     }
+
+    return {
+        latitude: latitude,
+        longitude: longitude,
+        id: id
+    };
 };
 
 export const validaCoordenada = (valorLido: string): boolean => {
-    const coordenada = splitCoord(valorLido);
+    const coordenadaComId = splitCoord(valorLido);
     
-    // Se splitCoord retornar null, a coordenada é inválida
-    if (coordenada === null) {
+    if (coordenadaComId === null) {
         return false;
     }
 
-    // Agora podemos acessar diretamente os valores pois são números válidos
     return (
-        coordenada.latitude >= -90 && 
-        coordenada.latitude <= 90 &&
-        coordenada.longitude >= -180 &&
-        coordenada.longitude <= 180
+        coordenadaComId.latitude >= -90 && 
+        coordenadaComId.latitude <= 90 &&
+        coordenadaComId.longitude >= -180 &&
+        coordenadaComId.longitude <= 180
     );
 };
+
+//recebe o id, latitude e longitude e valida no banco de dados se essas coordenadas esta atrelada ao id recebido
+export const validaPonto = async (id:number, lat:number, long:number) => {
+  const { data, error } = await getDataPonto(id);
+  if (error){
+    console.log(error);
+    return (false);
+  }
+  else{
+    if (data.latitude === lat && data.longitude === long){
+      return(true);
+    }
+    else{
+      Alert.alert(`Ponto invalido!`, `Nao foi possivel registrar o ponto, pois o qr code escaneado esta invalido!`);
+      return (false);
+    }
+  }
+  return true;
+}
     
 
 
-export default recordCheckPoint = (latitude: number, longitude:number) => {
+export const recordCheckPoint = async (data:string, func_id:number) => {
+  const content = splitCoord(data);
+  const local = await getDeviceLocation();
+  if (content && local){
+    const distance = getDistanceBetween(content?.latitude, content?.longitude, local?.latitude, local?.longitude)
+    if (await validaPonto(content.id, content.latitude, content.longitude)){
+      if (distance <= 30){
+        console.log(`Valido!`);
+      }
+      else{
+        console.log(`Distante!`);
+      }
 
+    }
+    else{
+      console.log(`Invalido`);
+      return (false);
+    }
+  }
+  else{
+    Alert.alert(`Erro!`, `Problema ao buscar coordenadas!`)
+  }
+
+  
+  // if (!validaCoordenada(data)){
+  //   Alert.alert(`Coordenada invalida!`);
+  // }
+  // else{
+  //     Alert.alert(`local`,`${local?.latitude}`);
+  //   }
+    
+}
+
+export const gravar = async (local:number, id:number) => {
+  const {data, error} = await registrarPonto(local, id);
+  console.log(id)
+  if (error){
+    console.log(error.message)
+  }
+ 
 }
 
 
@@ -82,9 +152,6 @@ export const getDeviceLocation = async (): Promise<{
   }
 };
 
-
-
-
 export const getDistanceBetween = (latA: number, longA: number, latB: number, longB: number) => {
   const r = 6371000; // Raio da Terra em metros
   
@@ -106,5 +173,5 @@ export const getDistanceBetween = (latA: number, longA: number, latB: number, lo
   // Distância = Raio × Ângulo Central
   const d = r * c;
   console.log(`Distancia entre: \n ${latA} \n ${longA} \n ${latB} \n ${longB}`)
-  return d.toFixed(4); // Retorna a distância calculada
+  return parseFloat(d.toFixed(4)); // Retorna a distância calculada
 };

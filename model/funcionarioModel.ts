@@ -27,7 +27,7 @@ export const getDadosModel = async (idFunc: number) => {
     .eq('id', idFunc)
     .single()
 
-    return {data, error}
+    return {data, error};
 }
 
 export const getPontos = async (idFunc: number) => {

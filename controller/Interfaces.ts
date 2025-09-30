@@ -10,7 +10,8 @@ export type PropsStackRoutes = {
     RegistroPonto: {
         latitude: number;
         longitude: number;
-    }
+        func_id:number;
+    };
 }
 
 export type PropsScreenApps <T extends keyof PropsStackRoutes>= NativeStackScreenProps<PropsStackRoutes, T>

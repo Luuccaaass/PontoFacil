@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, StyleSheet, View, Text, Vibration} from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { validaCoordenada, getDeviceLocation, splitCoord} from 'controller/funcaoValidadoraCoordenada';
+import { validaCoordenada, getDeviceLocation, splitCoord, recordCheckPoint} from 'controller/funcaoValidadoraCoordenada';
 import { PropsScreenApps } from "../../controller/Interfaces";
 import { getDistanceBetween } from 'controller/funcaoValidadoraCoordenada';
+import { recognizePrefixSuffix } from 'react-native-reanimated/lib/typescript/animation/util';
 
-const QRCodeScanner = ({ navigation, route }: PropsScreenApps<'RegistroPonto'>) => {
+export const QRCodeScanner = ({ navigation, route }: PropsScreenApps<'RegistroPonto'>) => {
 
-  
+  const func_id = route.params.func_id;
   const [facing, setFacing] = useState<'front' | 'back'>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
@@ -26,10 +27,9 @@ const QRCodeScanner = ({ navigation, route }: PropsScreenApps<'RegistroPonto'>) 
     setScanned(true);
     setLeitura(data);
 
+
+    
     /*
-*/
-    
-    
     const coordenadaLida = splitCoord(data);
     if (coordenadaLida != null){
       const distance = getDistanceBetween(latitude, longitude, coordenadaLida?.latitude, coordenadaLida?.longitude)
@@ -52,7 +52,10 @@ const QRCodeScanner = ({ navigation, route }: PropsScreenApps<'RegistroPonto'>) 
         }
       ]
     );
-    }
+    }*/
+    recordCheckPoint(data, func_id);
+    
+
   };
 
   if (!permission) {
