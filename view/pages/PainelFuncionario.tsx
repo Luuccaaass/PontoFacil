@@ -6,7 +6,7 @@ import GlobalStyles from "../styles/GlobalStyles";
 import PainelStyles from "../styles/PainelStyles";
 import { getDadosFuncionario } from "../../controller/funcionarioControler";
 import { PropsScreenApps } from "../../controller/Interfaces";
-import { getDeviceLocation, getDistanceBetween, gravar, validaPonto } from "controller/funcaoValidadoraCoordenada";
+import { getDeviceLocation, getDistanceBetween, validaPonto } from "controller/checkPointController";
 import { setShouldAnimateExitingForTag } from "react-native-reanimated/lib/typescript/core";
 import { registrarPonto } from "model/registroPontoModel";
 
@@ -90,8 +90,8 @@ const PainelFuncionario = ({ navigation, route }: PropsScreenApps<'Painel'>) =>{
                 {/* Obter localizacao */}
                 <TouchableOpacity
                     style={GlobalStyles.botao}
-                    onPress={()=> registrarPonto(1, 1)
-                }
+                    
+                
                 >
                     <Text 
                     style={GlobalStyles.textoBotao}

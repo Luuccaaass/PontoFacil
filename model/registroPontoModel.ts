@@ -1,9 +1,9 @@
 import {supabaseConnection} from '../services/supabase';
 
-export const registrarPonto = async (loc_id: number, func_id:number) => {
+export const registrarPonto = async (loc_id: number, func_id:number, date:string, hour:string) => {
     const { data, error } = await supabaseConnection
     .from(`registro_pontos`)
-    .insert({local_id: loc_id, func_id: func_id, data:`12/12/2012`, hora:`12:12`});
+    .insert({local_id: loc_id, func_id: func_id, data:date, hora:hour});
 
     
 

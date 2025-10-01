@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, StyleSheet, View, Text, Vibration} from 'react-native';
+import { Alert, StyleSheet, View, Text, Vibration } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { validaCoordenada, getDeviceLocation, splitCoord, recordCheckPoint} from 'controller/funcaoValidadoraCoordenada';
+import { validaCoordenada, getDeviceLocation, splitCoord, recordCheckPoint } from 'controller/checkPointController';
 import { PropsScreenApps } from "../../controller/Interfaces";
-import { getDistanceBetween } from 'controller/funcaoValidadoraCoordenada';
+import { getDistanceBetween } from 'controller/checkPointController';
 import { recognizePrefixSuffix } from 'react-native-reanimated/lib/typescript/animation/util';
 
 export const QRCodeScanner = ({ navigation, route }: PropsScreenApps<'RegistroPonto'>) => {
@@ -23,38 +23,21 @@ export const QRCodeScanner = ({ navigation, route }: PropsScreenApps<'RegistroPo
   }, []);
 
   //funcao que le o qr code
-  const handleBarCodeScanned = ({ data }: { data: string }) => {
+  const handleBarCodeScanned = async ({ data }: { data: string }) => {
     setScanned(true);
     setLeitura(data);
 
-
-    
-    /*
-    const coordenadaLida = splitCoord(data);
-    if (coordenadaLida != null){
-      const distance = getDistanceBetween(latitude, longitude, coordenadaLida?.latitude, coordenadaLida?.longitude)
-      Alert.alert(
-        `Coordenada lida`, `Distancia de voce: ${distance}`,
-      [
-        {
-          onPress: () => setScanned(false), // Permite nova leitura
-        }
-      ]
-      );
+    if (await recordCheckPoint(data, func_id)) {
+      //navigation.goBack();
+    }
+    else if (!await recordCheckPoint(data, func_id)){
+      setScanned(false);
     }
     else{
-      Alert.alert(
-      `QR Code invalido!`,
-      `O QR Code lido nao e validos`,
-      [
-        {
-          onPress: () => setScanned(false), // Permite nova leitura
-        }
-      ]
-    );
-    }*/
-    recordCheckPoint(data, func_id);
-    
+      setScanned(true);
+    }
+
+
 
   };
 
