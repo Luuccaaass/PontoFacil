@@ -11,13 +11,14 @@ type local_ponto = {
   id: number;
 }
 
+//converte graus para radianos
 function toRadians(degrees: number): number {
   return degrees * (Math.PI / 180);
 
 }
 
 
-
+//recebe a string do QR Code e transforma em um vetor com [ latitude, longitude, id ]
 export const splitCoord = (valor: string): local_ponto | null => {
   // Remove espaços no início/fim e divide apenas por vírgula (sem espaços opcionais)
   const partes = valor.trim().split(',');
@@ -43,6 +44,7 @@ export const splitCoord = (valor: string): local_ponto | null => {
   };
 };
 
+//recebe dois valores e verifica se sao uma coordenada geografica
 export const validaCoordenada = (valorLido: string): boolean => {
   const coordenadaComId = splitCoord(valorLido);
 
@@ -67,19 +69,13 @@ export const validaPonto = async (id: number, lat: number, long: number) => {
   }
   else {
     if (data.latitude === lat && data.longitude === long) {
-      return (true);
+      return true;
     }
     else {
-      Alert.alert(`Ponto invalido!`, `Nao foi possivel registrar o ponto, pois o qr code escaneado esta invalido!`,
-      [
-        {
-          onPress: () => {return(false)}
-        }
-      ]
-      );
+      return false;
     }
   }
-  return (null);
+  return false;
 }
 
 
@@ -96,62 +92,36 @@ export const recordCheckPoint = async (data: string, func_id: number) => {
       if (distance <= 30) {
         const { data, error } = await registrarPonto(content.id, func_id, fDate, fHour);
         if (!error) {
-          Alert.alert(`Registrado`, `Ponto registrado com sucesso!`, 
-            [
-              {
-                onPress: ()=> {return(true)}
-              }
-            ]
-          )
+          return true;
+          console.log(`Registrado!`);
 
         }
-        else if (!await validaPonto(content.id, content.latitude, content.longitude)){
-          Alert.alert(`Erro!`, `Problema de conexao com o servidor!`, [
-            {
-              onPress: () => { return (false) }
-            }
-
-          ]
-          )
+        else {
+          console.log(error); //a ser retirado na ultima versao
+          return false;
         }
 
       }
       else {
-        Alert.alert(`Muito distante`, `O ponto esta muito longe!`, 
-          [
-            {
-              onPress: () => {return(false)}
-            }
-          ]
-        );
+        console.log(`Distante`); //a ser retirado na ultima versao
+        return false;
       }
     }
     else {
-      Alert.alert(`Invalido`, `Ponto invalido!`,
-        [
-          {
-            onPress: () => {return(false)}
-          }
-        ]
-      );
+      console.log(`Codigo invalido!`); //a ser retirado na ultima versao
+      return false;
     }
   }
   else {
-    Alert.alert(`Erro!`, `Problema ao buscar coordenadas!`, 
-      [
-        {
-          onPress: () => {return(false)}
-        }
-      ]
-    )
+    return false;
   }
-  return (null);
+  return false;
 }
 
 
 
 
-
+//obtem a prosicao do gps retornando latitude e longitude
 export const getDeviceLocation = async (): Promise<{
   latitude: number;
   longitude: number;
@@ -200,7 +170,6 @@ export const getDistanceBetween = (latA: number, longA: number, latB: number, lo
 
   // Distância = Raio × Ângulo Central
   const d = r * c;
-  console.log(`Distancia entre: \n ${latA} \n ${longA} \n ${latB} \n ${longB}`)
   return parseFloat(d.toFixed(4)); // Retorna a distância calculada
 };
 

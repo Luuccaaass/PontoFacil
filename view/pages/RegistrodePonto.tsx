@@ -28,13 +28,24 @@ export const QRCodeScanner = ({ navigation, route }: PropsScreenApps<'RegistroPo
     setLeitura(data);
 
     if (await recordCheckPoint(data, func_id)) {
-      //navigation.goBack();
-    }
-    else if (!await recordCheckPoint(data, func_id)){
-      setScanned(false);
+      Alert.alert(`Sucesso!`, `Ponto registrado com sucesso!`, 
+        [
+          {
+            onPress: () => {setScanned(false)}
+          }
+        ]
+
+      );
     }
     else{
-      setScanned(true);
+      Alert.alert(`Erro!`, `Erro ao registrar ponto!`, 
+        [
+          {
+            onPress: () => {setScanned(false)}
+          }
+        ]
+
+      );
     }
 
 
