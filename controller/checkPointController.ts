@@ -1,9 +1,9 @@
 import { Text, Alert } from "react-native"
 import * as Location from 'expo-location'
 import { ColorProperties } from "react-native-reanimated/lib/typescript/Colors";
-import { getDataPonto, registrarPonto, getPontos } from "model/registroPontoModel";
+import { getDataPonto, registrarPonto, getPontos } from "model/RegistroPontoModel";
 import { registerLoggerConfig } from "react-native-reanimated/lib/typescript/logger";
-const maxDistanceAccepted = 10;
+const maxDistanceAccepted = 30;
 
 type local_ponto = {
   latitude: number;
@@ -15,8 +15,7 @@ type local_ponto = {
 function toRadians(degrees: number): number {
   return degrees * (Math.PI / 180);
 
-}
-
+};
 
 //recebe a string do QR Code e transforma em um vetor com [ latitude, longitude, id ]
 export const splitCoord = (valor: string): local_ponto | null => {
@@ -45,7 +44,7 @@ export const splitCoord = (valor: string): local_ponto | null => {
 };
 
 //recebe dois valores e verifica se sao uma coordenada geografica
-export const validaCoordenada = (valorLido: string): boolean => {
+export const isValidCoordinate = (valorLido: string): boolean => {
   const coordenadaComId = splitCoord(valorLido);
 
   if (coordenadaComId === null) {
@@ -61,7 +60,7 @@ export const validaCoordenada = (valorLido: string): boolean => {
 };
 
 //recebe o id, latitude e longitude e valida no banco de dados se essas coordenadas esta atrelada ao id recebido
-export const validaPonto = async (id: number, lat: number, long: number) => {
+export const isValidCheckpoint = async (id: number, lat: number, long: number) => {
   const { data, error } = await getDataPonto(id);
   if (error) {
     console.log(error);
@@ -76,8 +75,7 @@ export const validaPonto = async (id: number, lat: number, long: number) => {
     }
   }
   return false;
-}
-
+};
 
 //valida o qr code --> calcula a distancia do funcionario para o ponto --> se a distancia for menor do que 30m ele registra o ponto
 export const recordCheckPoint = async (data: string, func_id: number) => {
@@ -88,8 +86,8 @@ export const recordCheckPoint = async (data: string, func_id: number) => {
   const fHour = date.toLocaleTimeString(`pt-BR`);
   if (content && local) {
     const distance = getDistanceBetween(content?.latitude, content?.longitude, local?.latitude, local?.longitude)
-    if (await validaPonto(content.id, content.latitude, content.longitude)) {
-      if (distance <= 30) {
+    if (await isValidCheckpoint(content.id, content.latitude, content.longitude)) {
+      if (distance <= maxDistanceAccepted) {
         const { data, error } = await registrarPonto(content.id, func_id, fDate, fHour);
         if (!error) {
           return true;
@@ -116,10 +114,7 @@ export const recordCheckPoint = async (data: string, func_id: number) => {
     return false;
   }
   return false;
-}
-
-
-
+};
 
 //obtem a prosicao do gps retornando latitude e longitude
 export const getDeviceLocation = async (): Promise<{
@@ -173,7 +168,7 @@ export const getDistanceBetween = (latA: number, longA: number, latB: number, lo
   return parseFloat(d.toFixed(4)); // Retorna a distância calculada
 };
 
-export const getPontosFunc = async(id:number) => {
+export const getCheckpointsByFunc = async(id:number) => {
   try{
     const { data, error } = await getPontos(20)
     if (!error){

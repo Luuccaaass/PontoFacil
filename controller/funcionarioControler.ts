@@ -1,5 +1,5 @@
 import { Alert } from 'react-native';
-import { cadastrarFuncionarioModel, getDadosModel, getDadosLogin } from '../model/funcionarioModel';
+import { cadastrarFuncionarioModel, getDadosModel, getDadosLogin } from '../model/FuncionarioModel';
 import { useState } from 'react';
 // import { useNavigation, NavigationProp} from '@react-navigation/native';
 import { NavigationProp } from "@react-navigation/native";
@@ -7,7 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 
 
-export const cadastrarFuncionarioController = async(cpf: number, nome:string, cargo:string, salario:number, senha:string, navigation:any) => {
+export const registerCollaborator = async(cpf: number, nome:string, cargo:string, salario:number, senha:string, navigation:any) => {
     try {
         const { data, error } = await cadastrarFuncionarioModel(cpf, nome, cargo, salario, senha);
 
@@ -22,7 +22,7 @@ export const cadastrarFuncionarioController = async(cpf: number, nome:string, ca
     catch (error){
 
     }
-}
+};
 
 //função que recebe o CPF, a senha e valida para entrar no
 export const validarFuncionario = async(cpf:number, senha:string, navigation:any) => {
@@ -42,9 +42,9 @@ export const validarFuncionario = async(cpf:number, senha:string, navigation:any
         }
     }
     catch(error){
-
+        
     }
-}
+};
 
 
 //função para solicitar os dados do funcionário para a camada model

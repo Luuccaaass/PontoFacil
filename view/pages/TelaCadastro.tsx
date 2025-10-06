@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, Image} from 'react-native';
-import { cadastrarFuncionarioController } from "../../controller/funcionarioControler";
+import { registerCollaborator } from "../../controller/FuncionarioControler";
 import { NavigationProp } from "@react-navigation/native";
 import { PropsScreenApps } from "../../controller/Interfaces";
 
@@ -86,7 +86,7 @@ const Cadastro = ({ navigation }:PropsScreenApps<'Cadastro'>) => {
 
             <TouchableOpacity
               style={GlobalStyles.botao}
-              onPress={() => cadastrarFuncionarioController(parseInt(cpf), usuario, cargo, parseFloat(salario), senha, navigation)}
+              onPress={() => registerCollaborator(parseInt(cpf), usuario, cargo, parseFloat(salario), senha, navigation)}
             >
               <Text style={GlobalStyles.textoBotao}>Cadastrar</Text>
             </TouchableOpacity>

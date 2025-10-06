@@ -135,6 +135,7 @@ export default StyleSheet.create({
     horariosContentContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        height:40,
     },
     horarioItem: {
         flexDirection: 'row',

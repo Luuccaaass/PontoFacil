@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, TextInput, Button, Alert, Image, TouchableOpaci
 import '../styles/TelaLoginStyles';
 import TelaLoginStyles from '../styles/TelaLoginStyles';
 import GlobalStyles from '../styles/GlobalStyles';
-import { validarFuncionario } from '../../controller/funcionarioControler';
+import { validarFuncionario } from '../../controller/FuncionarioControler';
 import { NavigationProp } from '@react-navigation/native';
 import { PropsScreenApps } from '../../controller/Interfaces';
 

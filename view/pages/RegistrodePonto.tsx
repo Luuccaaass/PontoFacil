@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, StyleSheet, View, Text, Vibration } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { validaCoordenada, getDeviceLocation, splitCoord, recordCheckPoint } from 'controller/checkPointController';
+import { isValidCoordinate, getDeviceLocation, splitCoord, recordCheckPoint } from 'controller/CheckPointController';
 import { PropsScreenApps } from "../../controller/Interfaces";
-import { getDistanceBetween } from 'controller/checkPointController';
+import { getDistanceBetween } from 'controller/CheckPointController';
 import { recognizePrefixSuffix } from 'react-native-reanimated/lib/typescript/animation/util';
 
 export const QRCodeScanner = ({ navigation, route }: PropsScreenApps<'RegistroPonto'>) => {
