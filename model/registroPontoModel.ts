@@ -8,7 +8,7 @@ export const registrarPonto = async (loc_id: number, func_id:number, date:string
     
 
     return ({ data, error });
-}
+};
 
 
 export const getDataPonto = async (id:number) => {
@@ -19,4 +19,13 @@ export const getDataPonto = async (id:number) => {
     .single()
 
     return{ data, error };
+};
+
+export const getPontos = async (idFunc: number) => {
+    const { data, error } = await supabaseConnection
+    .from('registro_pontos')
+    .select('data, hora, local_id')
+    .eq('func_id', idFunc)
+
+    return{ data, error }
 }

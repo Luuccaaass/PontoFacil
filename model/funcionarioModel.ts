@@ -7,7 +7,7 @@ export const cadastrarFuncionarioModel = async (cpf:number, nome:string, cargo:s
     .insert({ CPF: cpf, nome: nome, cargo: cargo, salario: salario, senha: senha });
 
     return { data, error };
-}
+};
 
 export const getDadosLogin = async (cpf: number) => {
     const { data, error } = await supabaseConnection
@@ -18,7 +18,7 @@ export const getDadosLogin = async (cpf: number) => {
 
 
     return {data, error}
-}
+};
 
 export const getDadosModel = async (idFunc: number) => {
     const { data, error } = await supabaseConnection
@@ -28,13 +28,4 @@ export const getDadosModel = async (idFunc: number) => {
     .single()
 
     return {data, error};
-}
-
-export const getPontos = async (idFunc: number) => {
-    const { data, error } = await supabaseConnection
-    .from('registro_pontos')
-    .select('*')
-    .eq('func_id', idFunc)
-
-    return{ data, error }
-}
+};

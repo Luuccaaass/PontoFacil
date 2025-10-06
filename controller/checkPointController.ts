@@ -1,7 +1,7 @@
 import { Text, Alert } from "react-native"
 import * as Location from 'expo-location'
 import { ColorProperties } from "react-native-reanimated/lib/typescript/Colors";
-import { getDataPonto, registrarPonto } from "model/registroPontoModel";
+import { getDataPonto, registrarPonto, getPontos } from "model/registroPontoModel";
 import { registerLoggerConfig } from "react-native-reanimated/lib/typescript/logger";
 const maxDistanceAccepted = 10;
 
@@ -171,5 +171,20 @@ export const getDistanceBetween = (latA: number, longA: number, latB: number, lo
   // Distância = Raio × Ângulo Central
   const d = r * c;
   return parseFloat(d.toFixed(4)); // Retorna a distância calculada
+};
+
+export const getPontosFunc = async(id:number) => {
+  try{
+    const { data, error } = await getPontos(20)
+    if (!error){
+      return (data);
+    }
+    else{
+      console.log(error);
+    }
+  }
+  catch{
+    console.log('Nao foi possivel conectar com o banco de dados!');
+  }
 };
 
