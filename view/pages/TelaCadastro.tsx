@@ -1,9 +1,10 @@
 import React from "react";
 import { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, Image} from 'react-native';
+import { Text, View, TextInput, Button, TouchableOpacity, Platform, ScrollView, Image} from 'react-native';
 import { registerCollaborator } from "../../controller/FuncionarioControler";
 import { NavigationProp } from "@react-navigation/native";
 import { PropsScreenApps } from "../../controller/Interfaces";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 //provisório
 import '../styles/TelaLoginStyles'
@@ -25,11 +26,13 @@ const Cadastro = ({ navigation }:PropsScreenApps<'Cadastro'>) => {
     const [senha, setSenha] = useState("");
 
     return (
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"} // Ajusta o comportamento dependendo da plataforma
-        
+      <KeyboardAwareScrollView
+      contentContainerStyle={{flex:1}}
+      //extraScrollHeight={100}
+      enableOnAndroid={true}
+      keyboardShouldPersistTaps="handled"
       >
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View style={GlobalStyles.container}>
             <Text
               style={TelaLoginStyles.textoTitulo}
@@ -102,7 +105,7 @@ const Cadastro = ({ navigation }:PropsScreenApps<'Cadastro'>) => {
             </TouchableOpacity>
           </View>
         </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     )
 }
 

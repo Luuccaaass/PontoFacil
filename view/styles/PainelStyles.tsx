@@ -95,6 +95,7 @@ export default StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: defaultBlack,
         paddingBottom: 12,
+        width:'90%',
     },
     dataTexto: {
         fontSize: 18,
@@ -136,6 +137,7 @@ export default StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         height:40,
+        width: '100%',
     },
     horarioItem: {
         flexDirection: 'row',

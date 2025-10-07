@@ -170,7 +170,7 @@ export const getDistanceBetween = (latA: number, longA: number, latB: number, lo
 
 export const getCheckpointsByFunc = async(id:number) => {
   try{
-    const { data, error } = await getPontos(20)
+    const { data, error } = await getPontos(id);
     if (!error){
       return (data);
     }
