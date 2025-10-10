@@ -17,11 +17,19 @@ export type PropsStackRoutes = {
         userId:number;
     };
     ManageCheckpoints: {
-        
+
     };
     CollabCheckpointView:{
         CollabId:number,
     };
+    EditCollabInfo: {
+        CollabId:number,
+        cpf:number,
+        usuario:string,
+        cargo:string,
+        salario:number
+        
+    }
 
 }
 

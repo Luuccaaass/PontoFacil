@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import {supabaseConnection} from '../services/supabase';
 
 
@@ -37,3 +38,18 @@ export const getCollabListModel = async () => {
 
     return { data, error }
 };
+
+export const updateCollabInfoModel = async (collabId:number, cpf:number, nome:string, cargo:string, salario: number) => {
+    const { data, error } = await supabaseConnection
+    .from('func')
+    .update({
+        CPF: cpf,
+        nome:nome,
+        cargo:cargo,
+        salario:salario
+    })
+    .eq('id', collabId)
+    .select();
+
+    return { data, error };
+}

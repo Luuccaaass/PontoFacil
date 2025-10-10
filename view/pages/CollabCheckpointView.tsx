@@ -4,16 +4,17 @@ import GlobalStyles from "view/styles/GlobalStyles"; "../styles/GlobalStyles";
 import PainelStyles from "view/styles/PainelStyles"; "../styles/PainelStyles"
 import { PropsScreenApps } from "../../controller/Interfaces";
 import { PainelController, PontoAgrupado, Coordenadas } from "../../controller/PainelController";
+import { editCollab } from "controller/FuncionarioController";
 
 const PainelFuncionario = ({ navigation, route }: PropsScreenApps<'CollabCheckpointView'>) => {
-    const id = route.params.CollabId;
+    const collabId = route.params.CollabId;
     const [dadosFuncionario, setDadosFuncionario] = useState<any>(null);
     const [pontosAgrupados, setPontosAgrupados] = useState<PontoAgrupado[]>([]);
 
     useEffect(() => {
         const buscarDados = async () => {
             try {
-                const dados = await PainelController.carregarDadosPainel(id);
+                const dados = await PainelController.carregarDadosPainel(collabId);
                 setDadosFuncionario(dados.dadosFuncionario);
                 setPontosAgrupados(dados.pontosAgrupados);
             } catch (error) {
@@ -22,7 +23,7 @@ const PainelFuncionario = ({ navigation, route }: PropsScreenApps<'CollabCheckpo
             }
         };
         buscarDados();
-    }, [id]);
+    }, [collabId]);
 
     const RenderDia = ({ item }: { item: PontoAgrupado }) => (
         <View style={PainelStyles.diaContainer}>
@@ -58,7 +59,7 @@ const PainelFuncionario = ({ navigation, route }: PropsScreenApps<'CollabCheckpo
                 </View>
                 <TouchableOpacity
                     style={PainelStyles.editButton}
-                    onPress={() => Alert.alert(`Clicado`)}
+                    onPress={() => editCollab(collabId, navigation)}
                 >
                     <Image
                     source={require('../../src/images/imgEditButton.png')}
