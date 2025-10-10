@@ -30,4 +30,5 @@ export const formatarData = (dataString: string): string => {
 // Função para formatar hora (remove segundos)
 export const formatarHora = (horaString: string): string => {
     return horaString.substring(0, 5); // Pega apenas HH:MM
-};
+}; 
+

@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, Alert, Image, TouchableOpacity, ScrollView } from "react-native";
-import GlobalStyles from "view/styles/GlobalStyles";"../styles/GlobalStyles";
+import { Text, View, Alert, Image, TouchableOpacity, ScrollView, TextComponent } from "react-native";
+import GlobalStyles from "view/styles/GlobalStyles"; "../styles/GlobalStyles";
 import PainelStyles from "view/styles/PainelStyles"; "../styles/PainelStyles"
 import { PropsScreenApps } from "../../controller/Interfaces";
 import { PainelController, PontoAgrupado, Coordenadas } from "../../controller/PainelController";
 
-const PainelFuncionario = ({ navigation, route }: PropsScreenApps<'PainelFunc'>) => {
-    const userId = route.params.userId;
+const PainelFuncionario = ({ navigation, route }: PropsScreenApps<'CollabCheckpointView'>) => {
+    const id = route.params.CollabId;
     const [dadosFuncionario, setDadosFuncionario] = useState<any>(null);
     const [pontosAgrupados, setPontosAgrupados] = useState<PontoAgrupado[]>([]);
 
     useEffect(() => {
         const buscarDados = async () => {
             try {
-                const dados = await PainelController.carregarDadosPainel(userId);
+                const dados = await PainelController.carregarDadosPainel(id);
                 setDadosFuncionario(dados.dadosFuncionario);
                 setPontosAgrupados(dados.pontosAgrupados);
             } catch (error) {
@@ -22,7 +22,7 @@ const PainelFuncionario = ({ navigation, route }: PropsScreenApps<'PainelFunc'>)
             }
         };
         buscarDados();
-    }, [userId]);
+    }, [id]);
 
     const RenderDia = ({ item }: { item: PontoAgrupado }) => (
         <View style={PainelStyles.diaContainer}>
@@ -52,11 +52,23 @@ const PainelFuncionario = ({ navigation, route }: PropsScreenApps<'PainelFunc'>)
                     source={require('../../src/images/UserIcon.png')}
                     style={PainelStyles.iconeFuncionario}
                 />
-                <View style={PainelStyles.boxInformacoes}>
+                <View style={[PainelStyles.boxInformacoes, {}]}>
                     <Text style={{ fontSize: 25 }}>{dadosFuncionario?.nome || "Carregando..."}</Text>
                     <Text style={{ fontSize: 18 }}>{dadosFuncionario?.cargo || "Carregando..."}</Text>
                 </View>
+                <TouchableOpacity
+                    style={PainelStyles.editButton}
+                    onPress={() => Alert.alert(`Clicado`)}
+                >
+                    <Image
+                    source={require('../../src/images/imgEditButton.png')}
+                    style={PainelStyles.imageButton}></Image>
+                </TouchableOpacity>
+
             </View>
+
+
+
 
             <View style={[PainelStyles.boxTable, PainelStyles.tableContainer]}>
                 <ScrollView
@@ -75,17 +87,6 @@ const PainelFuncionario = ({ navigation, route }: PropsScreenApps<'PainelFunc'>)
                         </View>
                     )}
                 </ScrollView>
-            </View>
-
-            <View style={PainelStyles.boxPontosView}>
-                <TouchableOpacity
-                    style={GlobalStyles.botao}
-                    onPress={() => navigation.navigate('RegistroPonto', {
-                        userId: userId
-                    })}
-                >
-                    <Text style={GlobalStyles.textoBotao}>Registrar ponto</Text>
-                </TouchableOpacity>
             </View>
         </View>
     );

@@ -4,14 +4,25 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 export type PropsStackRoutes = {
     Cadastro:undefined;
     Login:undefined;
-    Painel: {
-        id: number;
+    PainelFunc: {
+        userId: number;
     };
     RegistroPonto: {
-        latitude: number;
-        longitude: number;
-        func_id:number;
+        userId:number;
     };
+    PainelSup: {
+        userId: number;
+    };
+    ManageCollabs: {
+        userId:number;
+    };
+    ManageCheckpoints: {
+        
+    };
+    CollabCheckpointView:{
+        CollabId:number,
+    };
+
 }
 
 export type PropsScreenApps <T extends keyof PropsStackRoutes>= NativeStackScreenProps<PropsStackRoutes, T>

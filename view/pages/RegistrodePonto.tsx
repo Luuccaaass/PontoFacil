@@ -8,13 +8,12 @@ import { recognizePrefixSuffix } from 'react-native-reanimated/lib/typescript/an
 
 export const QRCodeScanner = ({ navigation, route }: PropsScreenApps<'RegistroPonto'>) => {
 
-  const func_id = route.params.func_id;
+  const userId = route.params.userId;
   const [facing, setFacing] = useState<'front' | 'back'>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const [leitura, setLeitura] = useState<string | null>(null);
-  const latitude = route.params.latitude;
-  const longitude = route.params.longitude;
+
 
 
 
@@ -27,7 +26,7 @@ export const QRCodeScanner = ({ navigation, route }: PropsScreenApps<'RegistroPo
     setScanned(true);
     setLeitura(data);
 
-    if (await recordCheckPoint(data, func_id)) {
+    if (await recordCheckPoint(data, userId)) {
       Alert.alert(`Sucesso!`, `Ponto registrado com sucesso!`, 
         [
           {

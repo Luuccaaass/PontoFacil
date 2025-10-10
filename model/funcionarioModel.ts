@@ -12,7 +12,7 @@ export const cadastrarFuncionarioModel = async (cpf:number, nome:string, cargo:s
 export const getDadosLogin = async (cpf: number) => {
     const { data, error } = await supabaseConnection
     .from('func')
-    .select ('id, senha')
+    .select ('id, senha, cargo')
     .eq('CPF', cpf)
     .single()
 
@@ -28,4 +28,12 @@ export const getDadosModel = async (idFunc: number) => {
     .single()
 
     return {data, error};
+};
+
+export const getCollabListModel = async () => {
+    const { data, error } = await supabaseConnection
+    .from('func')
+    .select('id, nome')
+
+    return { data, error }
 };

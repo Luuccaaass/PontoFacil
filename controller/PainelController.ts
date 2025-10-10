@@ -1,4 +1,4 @@
-import { getDadosFuncionario } from "./FuncionarioControler";
+import { getDadosFuncionario } from "./FuncionarioController";
 import { getDeviceLocation, getCheckpointsByFunc } from "./CheckPointController";
 import { formatarData, formatarHora } from "./ContentFormatController";
 

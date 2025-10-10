@@ -1,10 +1,11 @@
 import React from "react";
 import { useState } from 'react';
 import { Text, View, TextInput, Button, TouchableOpacity, Platform, ScrollView, Image} from 'react-native';
-import { registerCollaborator } from "../../controller/FuncionarioControler";
+import { registerCollaborator } from "../../controller/FuncionarioController";
 import { NavigationProp } from "@react-navigation/native";
 import { PropsScreenApps } from "../../controller/Interfaces";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Picker } from "@react-native-picker/picker";
 
 //provisório
 import '../styles/TelaLoginStyles'
@@ -62,12 +63,17 @@ const Cadastro = ({ navigation }:PropsScreenApps<'Cadastro'>) => {
             />
 
             {/* cargo */}
-            <TextInput 
-              style={TelaLoginStyles.textInput}
-              placeholder="Cargo"
-              onChangeText={(text) => setCargo(text)}
-              value={cargo}
-            />
+            <View style={TelaLoginStyles.dropDownContainer}>
+              <Picker
+                selectedValue={cargo}
+                onValueChange={(text) => setCargo(text)}>
+                  <Picker.Item label="Cargo" value=""/>
+                  <Picker.Item label="Supervisor" value="supervisor"/>
+                  <Picker.Item label="Vigilante" value="vigilante"/>
+                  <Picker.Item label="Administrativo" value="administrativo"/>
+              </Picker>
+            </View>
+
         
             {/*salario */}
             <TextInput 
@@ -86,6 +92,7 @@ const Cadastro = ({ navigation }:PropsScreenApps<'Cadastro'>) => {
               onChangeText={(text) => setSenha(text)}
               value={senha}
             />
+
 
             <TouchableOpacity
               style={GlobalStyles.botao}

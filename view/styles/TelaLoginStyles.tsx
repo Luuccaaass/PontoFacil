@@ -1,3 +1,4 @@
+import { Picker } from "@react-native-picker/picker";
 import { StyleSheet } from "react-native";
 
 const laranjaApp = "#FF6800";
@@ -28,7 +29,18 @@ export default StyleSheet.create({
         marginTop:80,
     },
 
-
+    dropDownContainer: {    
+        borderBottomColor: 'black',
+        width:350,
+        borderWidth:0,
+        height:50,
+        borderBottomWidth:2,
+        backgroundColor:cinzaApp,
+        marginBottom:20,
+        alignContent: 'center',
+        justifyContent:"center",
+        textAlign:'left'
+    },
 
 
 })

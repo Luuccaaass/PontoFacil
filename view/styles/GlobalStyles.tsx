@@ -1,25 +1,20 @@
 import { StyleSheet } from "react-native";
-
-const laranjaApp = "#FF6800";
-const cinzaApp = "#B9B9B9";
-const verdeApp = "#6C64C8";
-
+import { DefaultAppColors } from "./DefaultColors";
 
 export default StyleSheet.create({
     container: {
         flex:1,
         alignItems: 'center',
-        backgroundColor: cinzaApp,
-        padding:20,
+        backgroundColor: DefaultAppColors.color.cinzaApp,
     },
-
-    boxDadosFunc: {
+    
+    boxHeaderUserInfo: {
         flexDirection:'row',
-        backgroundColor: laranjaApp,
+        backgroundColor: DefaultAppColors.color.laranjaApp,
         width: '100%',
         height:200,
     },
-    
+
     textInput: {    
         borderBottomColor: 'black',
         width:350,
@@ -27,12 +22,12 @@ export default StyleSheet.create({
         height:50,
         borderBottomWidth:2,
         padding:10,
-        backgroundColor:cinzaApp,
+        backgroundColor: DefaultAppColors.color.cinzaApp,
         marginBottom:20,
     },
 
     botao: {
-        backgroundColor:laranjaApp,
+        backgroundColor: DefaultAppColors.color.laranjaApp,
         width:350,
         height:65,
         borderRadius:20,
@@ -46,7 +41,6 @@ export default StyleSheet.create({
         marginTop: 20,
     },
 
-    
     textLink:{
         textAlign: 'center',
         justifyContent: 'center',
@@ -59,7 +53,18 @@ export default StyleSheet.create({
         textAlign:'center',
     },
 
+    headerTitleText:{
+        fontSize:32,
+        padding:15,
+        fontWeight: 'bold',
+    },
 
-   
-
+        headerInfoContent:{
+        flexDirection:'row',
+        backgroundColor: DefaultAppColors.color.laranjaApp,
+        width: '100%',
+        height:200,
+        alignItems: 'flex-end',
+    },
+    
 })
