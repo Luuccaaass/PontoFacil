@@ -3,7 +3,13 @@ import * as Location from 'expo-location'
 import { ColorProperties } from "react-native-reanimated/lib/typescript/Colors";
 import { getDataPonto, registrarPonto, getPontos } from "model/RegistroPontoModel";
 import { registerLoggerConfig } from "react-native-reanimated/lib/typescript/logger";
+import { editCheckpointModel, getCheckpointInfo, getCheckpointListModel } from "model/CheckPointManage";
 const maxDistanceAccepted = 30;
+
+export interface Checkpoint {
+  id: number,
+  identificador: string,
+};
 
 type local_ponto = {
   latitude: number;
@@ -168,18 +174,63 @@ export const getDistanceBetween = (latA: number, longA: number, latB: number, lo
   return parseFloat(d.toFixed(4)); // Retorna a distância calculada
 };
 
-export const getCheckpointsByFunc = async(id:number) => {
-  try{
+export const getCheckpointsByFunc = async (id: number) => {
+  try {
     const { data, error } = await getPontos(id);
-    if (!error){
+    if (!error) {
       return (data);
     }
-    else{
+    else {
       console.log(error);
     }
   }
-  catch{
+  catch {
     console.log('Nao foi possivel conectar com o banco de dados!');
   }
 };
 
+export const getCheckpointList = async (): Promise<Checkpoint[] | null> => {
+  try {
+    const { data, error } = await getCheckpointListModel();
+    if (error) {
+      return null;
+    }
+    return data;
+  }
+  catch (error) {
+    console.error(`erro`, error);
+    return null;
+  }
+};
+
+
+export const getCheckPointInfo = async(checkpointId:number) => {
+  try{
+    const { data, error } = await getCheckpointInfo(checkpointId);
+    if (data){
+      return data;
+    }
+    else{
+      console.log(error);
+    }
+    console.log(data);
+  }
+  catch (error){
+    console.log(error);
+  }
+};
+
+export const editCheckpointInfo = async(checkpointId:number, identificador:string, latitude:number, longitude:number) => {
+  try{
+    const { data, error } = await editCheckpointModel(checkpointId, identificador, latitude, longitude);
+    if (!error){
+      Alert.alert('Sucesso!', 'Ponto atualizado com sucesso!');
+    }
+    else{
+      Alert.alert('Erro!', 'Erro, tente novamente!');
+    }
+  }
+  catch{
+    
+  }
+};

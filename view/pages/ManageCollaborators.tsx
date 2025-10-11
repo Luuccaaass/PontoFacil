@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { PropsScreenApps } from "controller/Interfaces";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import GlobalStyles from "view/styles/GlobalStyles";
-import { getCollabListController, Collab } from "controller/FuncionarioController";
+import { getCollabList, Collab } from "controller/FuncionarioController";
 import { CollabStyle } from "view/styles/CollabListView";
 
 export const ManageCollaborators = ({ navigation, route }: PropsScreenApps<'ManageCollabs'>) => {
@@ -12,7 +12,7 @@ export const ManageCollaborators = ({ navigation, route }: PropsScreenApps<'Mana
     useEffect(() => {
         const carregaDados = async () => {
             try {
-                const dados = await getCollabListController();
+                const dados = await getCollabList();
                 if (dados) {
                     setFunc(dados);
                 }

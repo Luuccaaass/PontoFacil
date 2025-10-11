@@ -28,6 +28,13 @@ modalButton: {
   borderRadius: 5,
   alignSelf: 'center',
 },
+coordsContainer: {
+  flexDirection: 'row',
+  backgroundColor: 'blue',
+  height: 70,
+  width: '80%'
+},
+
 
 
 })

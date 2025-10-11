@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from 'react';
 import { Text, View, TextInput, Button, TouchableOpacity, Platform, ScrollView, Image } from 'react-native';
-import { registerCollaborator, updateCollabInfo } from "../../controller/FuncionarioController";
+import { deleteCollab, registerCollaborator, updateCollabInfo } from "../../controller/FuncionarioController";
 import { NavigationProp } from "@react-navigation/native";
 import { PropsScreenApps } from "../../controller/Interfaces";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -79,6 +79,12 @@ export const EditCollabInfo = ({ navigation, route }: PropsScreenApps<'EditColla
                         onPress={() => updateCollabInfo(collabId, cpf, usuario, cargo, salario)}
                     >
                         <Text style={GlobalStyles.textoBotao}>Confirmar</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={GlobalStyles.botao}
+                        onPress={() => deleteCollab(collabId)}
+                    >
+                        <Text style={GlobalStyles.textoBotao}>Desligar funcionário</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>

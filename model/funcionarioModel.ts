@@ -43,7 +43,7 @@ export const updateCollabInfoModel = async (collabId:number, cpf:number, nome:st
     const { data, error } = await supabaseConnection
     .from('func')
     .update({
-        CPF: cpf,
+        CPF:cpf,
         nome:nome,
         cargo:cargo,
         salario:salario
@@ -52,4 +52,13 @@ export const updateCollabInfoModel = async (collabId:number, cpf:number, nome:st
     .select();
 
     return { data, error };
-}
+};
+
+export const deleteCollabModel = async (collabId:number) => {
+    const { data, error } = await supabaseConnection
+    .from('func')
+    .delete()
+    .eq('id', collabId)
+
+    return { data, error };
+};

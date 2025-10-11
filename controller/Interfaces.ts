@@ -22,15 +22,17 @@ export type PropsStackRoutes = {
     CollabCheckpointView:{
         CollabId:number,
     };
+
     EditCollabInfo: {
         CollabId:number,
         cpf:number,
         usuario:string,
         cargo:string,
-        salario:number
-        
-    }
-
+        salario:number,
+    };
+    EditCheckpoint: {
+        checkPpointId: number,
+    };
 }
 
 export type PropsScreenApps <T extends keyof PropsStackRoutes>= NativeStackScreenProps<PropsStackRoutes, T>

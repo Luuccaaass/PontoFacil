@@ -10,7 +10,7 @@ import { ManageCheckpoints } from "view/pages/ManageCheckPoints";
 import { ManageCollaborators } from "view/pages/ManageCollaborators";
 import CollabCheckpointView from "view/pages/CollabCheckpointView";
 import { EditCollabInfo } from "view/pages/EditCollab";
-
+import { EditCheckpoint } from "view/pages/EditCheckpoint";
 
 const Stack = createNativeStackNavigator<PropsStackRoutes>();
 
@@ -29,6 +29,7 @@ const AppNavigator = () => {
             <Stack.Screen name="ManageCheckpoints" component={ManageCheckpoints} options={{headerShown:false}}/>
             <Stack.Screen name="CollabCheckpointView" component={CollabCheckpointView} options={{headerShown:false}}/>
             <Stack.Screen name="EditCollabInfo" component={EditCollabInfo} options={{headerShown:false}}/>
+            <Stack.Screen name="EditCheckpoint" component={EditCheckpoint} options={{headerShown:false}}/>
         </Stack.Navigator>
 
     )

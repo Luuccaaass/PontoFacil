@@ -1,9 +1,9 @@
 import { Alert } from 'react-native';
-import { cadastrarFuncionarioModel, getDadosModel, getDadosLogin, getCollabListModel, updateCollabInfoModel } from '../model/FuncionarioModel';
+import { cadastrarFuncionarioModel, getDadosModel, getDadosLogin, getCollabListModel, updateCollabInfoModel, deleteCollabModel } from '../model/FuncionarioModel';
 
 export interface Collab {
     id: number,
-    nome: string
+    nome: string,
 };
 
 export const registerCollaborator = async (cpf: number, nome: string, cargo: string, salario: number, senha: string, navigation: any) => {
@@ -63,7 +63,7 @@ export const getDadosFuncionario = async (id: number) => {
     }
 };
 
-export const getCollabListController = async (): Promise<Collab[] | null> => {
+export const getCollabList = async (): Promise<Collab[] | null> => {
     try {
         const { data, error } = await getCollabListModel();
         if (error) {
@@ -77,6 +77,8 @@ export const getCollabListController = async (): Promise<Collab[] | null> => {
         return null;
     }
 };
+
+
 
 export const editCollab = async (id: number, navigation: any) => {
     try {
@@ -108,3 +110,19 @@ export const updateCollabInfo = async (collabId:number, cpf:number, nome:string,
 
     }
 };
+
+export const deleteCollab = async (collabId:number) => {
+    try{
+        const { data, error } = await deleteCollabModel(collabId);
+        if (!error){
+            Alert.alert('Sucesso!', 'Funcionario desligado com sucesso!');
+        }
+        else if (error){
+            console.log(error)
+        }
+    }
+    catch{
+
+    }
+
+}
