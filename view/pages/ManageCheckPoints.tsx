@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { PropsScreenApps } from "controller/Interfaces";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import GlobalStyles from "view/styles/GlobalStyles";
@@ -12,21 +12,21 @@ export const ManageCheckpoints = ({ navigation, route }: PropsScreenApps<'Manage
 
     const [checkPoint, setCheckPoint] = useState<Checkpoint[]>([]);
 
-    useEffect(() => {
-        const loadData = async () => {
-            try {
-                const dados = await getCheckpointList();
-                if (dados) {
-                    setCheckPoint(dados);
+    useFocusEffect(
+        useCallback(() => {
+            const loadData = async () => {
+                try {
+                    const data = await getCheckpointList();
+                    if (data) {
+                        setCheckPoint(data);
+                    }
+                } catch (error) {
+                    console.log(error);
                 }
-            }
-            catch (error) {
-                console.log(error);
             };
-
-        };
-        loadData();
-    }, []);
+            loadData();
+        }, [])
+    );
 
     const pontosOrdenados = [...checkPoint].sort((a, b) => a.id - b.id);
 
@@ -34,7 +34,7 @@ export const ManageCheckpoints = ({ navigation, route }: PropsScreenApps<'Manage
         return (
             <TouchableOpacity
                 style={CollabStyle.row}
-                onPress={() => {navigation.navigate('EditCheckpoint',{checkPpointId:item.id})}}
+                onPress={() => { navigation.navigate('EditCheckpoint', { checkPpointId: item.id }) }}
             >
                 <Text style={CollabStyle.cellId}>{item.id}</Text>
                 <Text style={CollabStyle.cellSeparator}>|</Text>
@@ -46,9 +46,9 @@ export const ManageCheckpoints = ({ navigation, route }: PropsScreenApps<'Manage
     return (
         <View style={GlobalStyles.container}>
             <View style={[GlobalStyles.headerInfoContent, { height: 120 }]}>
-                <Text style={GlobalStyles.headerTitleText}>Gerenciar potos</Text>
+                <Text style={GlobalStyles.headerTitleText}>Gerenciar pontos</Text>
             </View>
-            <View style={[CollabStyle.CollabList, {height:'72%'}]}>
+            <View style={[CollabStyle.CollabList, { height: '72%' }]}>
                 <View style={CollabStyle.row}>
                     <Text style={CollabStyle.cellId}>ID</Text>
                     <Text style={CollabStyle.cellSeparator} />
@@ -62,7 +62,7 @@ export const ManageCheckpoints = ({ navigation, route }: PropsScreenApps<'Manage
             </View>
             <TouchableOpacity
                 style={GlobalStyles.botao}
-                onPress={() => {}}
+                onPress={() => navigation.navigate('NewCheckpoint', {})}
             >
                 <Text style={GlobalStyles.textoBotao}>Registrar novo ponto</Text>
             </TouchableOpacity>

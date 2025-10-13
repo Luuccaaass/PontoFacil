@@ -3,7 +3,7 @@ import * as Location from 'expo-location'
 import { ColorProperties } from "react-native-reanimated/lib/typescript/Colors";
 import { getDataPonto, registrarPonto, getPontos } from "model/RegistroPontoModel";
 import { registerLoggerConfig } from "react-native-reanimated/lib/typescript/logger";
-import { editCheckpointModel, getCheckpointInfo, getCheckpointListModel } from "model/CheckPointManage";
+import { editCheckpointModel, getCheckpointInfo, getCheckpointListModel, registerNewCheckpointModel } from "model/CheckPointManage";
 const maxDistanceAccepted = 30;
 
 export interface Checkpoint {
@@ -11,11 +11,12 @@ export interface Checkpoint {
   identificador: string,
 };
 
-type local_ponto = {
+export interface local_ponto {
   latitude: number;
   longitude: number;
   id: number;
-}
+};
+
 
 //converte graus para radianos
 function toRadians(degrees: number): number {
@@ -233,4 +234,42 @@ export const editCheckpointInfo = async(checkpointId:number, identificador:strin
   catch{
     
   }
+};
+
+export const getCurrentCoordinates = async (): Promise<{ latitude: number; longitude: number } | null> => {
+    try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        
+        if (status !== 'granted') {
+            console.error('Permissão de localização negada');
+            return null;
+        }
+
+        let location = await Location.getCurrentPositionAsync({});
+        
+        return {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude
+        };
+        
+    } catch (error) {
+        console.error('Erro ao obter localização:', error);
+        return null;
+    }
+};
+
+export const newCheckpoint = async (identificador: string, latitude:string, longitude:string) => {
+  try{
+    const { data, error } = await registerNewCheckpointModel(identificador, parseFloat(latitude), parseFloat(longitude));
+    if (error){
+      Alert.alert('Erro ao registrar novo ponto!');
+    }
+    else{
+      Alert.alert('Sucesso!', 'Novo ponto registrado com sucesso!');
+    }
+  }
+  catch(error){
+    console.log(error);
+  }
+
 };

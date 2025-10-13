@@ -33,6 +33,10 @@ export type PropsStackRoutes = {
     EditCheckpoint: {
         checkPpointId: number,
     };
+
+    NewCheckpoint:{
+        
+    }
 }
 
 export type PropsScreenApps <T extends keyof PropsStackRoutes>= NativeStackScreenProps<PropsStackRoutes, T>

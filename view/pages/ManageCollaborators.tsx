@@ -1,28 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { PropsScreenApps } from "controller/Interfaces";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import GlobalStyles from "view/styles/GlobalStyles";
 import { getCollabList, Collab } from "controller/FuncionarioController";
 import { CollabStyle } from "view/styles/CollabListView";
+import { useFocusEffect } from "@react-navigation/native";
 
 export const ManageCollaborators = ({ navigation, route }: PropsScreenApps<'ManageCollabs'>) => {
     const userId = route.params.userId;
     const [func, setFunc] = useState<Collab[]>([]);
 
-    useEffect(() => {
-        const carregaDados = async () => {
-            try {
-                const dados = await getCollabList();
-                if (dados) {
-                    setFunc(dados);
+    useFocusEffect(
+        useCallback(() => {
+            const carregaDados = async () => {
+                try {
+                    const dados = await getCollabList();
+                    if (dados) {
+                        setFunc(dados);
+                    }
+                } catch (error) {
+                    console.log(error);
                 }
-            }
-            catch (error) {
-                console.log(error);
-            }
-        };
-        carregaDados();
-    }, []);
+            };
+            carregaDados();
+        }, []) // Array de dependências vazio
+    );
 
     const funcOrdenados = [...func].sort((a, b) => a.id - b.id);
 

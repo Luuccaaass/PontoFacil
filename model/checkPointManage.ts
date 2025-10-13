@@ -30,3 +30,15 @@ export const editCheckpointModel = async (checkpointId:number, identificador:str
 
     return { data, error };
 };
+
+export const registerNewCheckpointModel = async(identificador:string, latitude:number, longitude:number) => {
+    const { data, error } = await supabaseConnection
+    .from('local_pontos')
+    .insert({
+        identificador: identificador,
+        latitude: latitude,
+        longitude: longitude,
+    });
+    console.log(data, error)
+    return { data, error };
+};

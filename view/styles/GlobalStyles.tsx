@@ -17,7 +17,7 @@ export default StyleSheet.create({
 
     textInput: {    
         borderBottomColor: 'black',
-        width:350,
+        width:'90%',
         borderWidth:0,
         height:50,
         borderBottomWidth:2,
