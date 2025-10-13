@@ -39,6 +39,5 @@ export const registerNewCheckpointModel = async(identificador:string, latitude:n
         latitude: latitude,
         longitude: longitude,
     });
-    console.log(data, error)
     return { data, error };
 };

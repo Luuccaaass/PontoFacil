@@ -4,6 +4,10 @@ import { ColorProperties } from "react-native-reanimated/lib/typescript/Colors";
 import { getDataPonto, registrarPonto, getPontos } from "model/RegistroPontoModel";
 import { registerLoggerConfig } from "react-native-reanimated/lib/typescript/logger";
 import { editCheckpointModel, getCheckpointInfo, getCheckpointListModel, registerNewCheckpointModel } from "model/CheckPointManage";
+import * as FileSystem from 'expo-file-system';
+import * as MediaLibrary from 'expo-media-library';
+
+
 const maxDistanceAccepted = 30;
 
 export interface Checkpoint {
@@ -75,7 +79,7 @@ export const isValidCoordinate = (valorLido: string): boolean => {
 export const isValidCheckpoint = async (id: number, lat: number, long: number) => {
   const { data, error } = await getDataPonto(id);
   if (error) {
-    console.log(error);
+    console.log(`Erro ao buscar informacoes`, error);
     return (false);
   }
   else {
@@ -94,8 +98,8 @@ export const recordCheckPoint = async (data: string, func_id: number) => {
   const content = splitCoord(data);
   const local = await getDeviceLocation();
   const date = new Date();
-  const fDate = date.toLocaleDateString(`pt-BR`);
-  const fHour = date.toLocaleTimeString(`pt-BR`);
+  const fDate = date.toISOString().split('T')[0];
+  const fHour = date.toISOString().split(' ')[0];
   if (content && local) {
     const distance = getDistanceBetween(content?.latitude, content?.longitude, local?.latitude, local?.longitude)
     if (await isValidCheckpoint(content.id, content.latitude, content.longitude)) {
@@ -107,7 +111,7 @@ export const recordCheckPoint = async (data: string, func_id: number) => {
 
         }
         else {
-          console.log(error); //a ser retirado na ultima versao
+          console.log(`Erro ao registrar o ponto no banco de dados`, error); //a ser retirado na ultima versao
           return false;
         }
 
@@ -187,11 +191,11 @@ export const getCheckpointsByFunc = async (id: number) => {
       return (data);
     }
     else {
-      console.log(error);
+      console.log(`Erro ao buscar os pontos do funcionario`, error);
     }
   }
-  catch {
-    console.log('Nao foi possivel conectar com o banco de dados!');
+  catch (error) {
+    console.log('Nao foi possivel conectar com o banco de dados!', error);
   }
 };
 
@@ -217,12 +221,12 @@ export const getCheckPointInfo = async (checkpointId: number) => {
       return data;
     }
     else {
-      console.log(error);
+      console.log(`Erro ao buscar informacoes do ponto`, error);
     }
     console.log(data);
   }
   catch (error) {
-    console.log(error);
+    console.log(`Erro inesperado`, error);
   }
 };
 
@@ -274,7 +278,9 @@ export const newCheckpoint = async (identificador: string, latitude: string, lon
     }
   }
   catch (error) {
-    console.log(error);
+    console.log(`Erro inesperado`, error);
   }
 
 };
+
+
