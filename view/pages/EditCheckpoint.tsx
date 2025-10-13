@@ -79,7 +79,12 @@ export const EditCheckpoint = ({ navigation, route }: PropsScreenApps<'EditCheck
                         onChangeText={(text) => setLongitude(parseFloat(text))}
                         value={longitude ? longitude.toString() : ''}
                     />
-
+                    <TouchableOpacity
+                        style={GlobalStyles.botao}
+                        onPress={() => {}}
+                    >
+                        <Text style={GlobalStyles.textoBotao}>Gerar QR Code</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity
                         style={GlobalStyles.botao}
                         onPress={() => { editCheckpointInfo(checkpointId, identificador, latitude, longitude) }}

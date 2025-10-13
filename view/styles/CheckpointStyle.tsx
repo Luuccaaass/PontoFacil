@@ -6,11 +6,11 @@ export const CheckpointStyle = StyleSheet.create ({
     MapPreview: {
         height: '50%', 
         width: '90%', 
-        backgroundColor:'blue', 
         marginTop:20,
         borderRadius: 20,
         borderWidth:4,
         borderColor: DefaultAppColors.color.defaultBlack,
+        overflow: 'hidden',
     },
 
     chekcpointInfoContainer: {

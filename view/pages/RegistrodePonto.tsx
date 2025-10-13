@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, StyleSheet, View, Text, Vibration } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { isValidCoordinate, getDeviceLocation, splitCoord, recordCheckPoint } from 'controller/CheckPointController';
+import { isValidCoordinate, splitCoord, recordCheckPoint } from 'controller/CheckPointController';
 import { PropsScreenApps } from "../../controller/Interfaces";
 import { getDistanceBetween } from 'controller/CheckPointController';
 import { recognizePrefixSuffix } from 'react-native-reanimated/lib/typescript/animation/util';

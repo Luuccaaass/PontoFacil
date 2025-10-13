@@ -17,6 +17,11 @@ export interface local_ponto {
   id: number;
 };
 
+export interface currentCoordinates {
+  latitude: number,
+  longitude: number
+};
+
 
 //converte graus para radianos
 function toRadians(degrees: number): number {
@@ -172,7 +177,7 @@ export const getDistanceBetween = (latA: number, longA: number, latB: number, lo
 
   // Distância = Raio × Ângulo Central
   const d = r * c;
-  return parseFloat(d.toFixed(4)); // Retorna a distância calculada
+  return parseFloat(d.toFixed(6)); // Retorna a distância calculada
 };
 
 export const getCheckpointsByFunc = async (id: number) => {
@@ -205,70 +210,70 @@ export const getCheckpointList = async (): Promise<Checkpoint[] | null> => {
 };
 
 
-export const getCheckPointInfo = async(checkpointId:number) => {
-  try{
+export const getCheckPointInfo = async (checkpointId: number) => {
+  try {
     const { data, error } = await getCheckpointInfo(checkpointId);
-    if (data){
+    if (data) {
       return data;
     }
-    else{
+    else {
       console.log(error);
     }
     console.log(data);
   }
-  catch (error){
+  catch (error) {
     console.log(error);
   }
 };
 
-export const editCheckpointInfo = async(checkpointId:number, identificador:string, latitude:number, longitude:number) => {
-  try{
+export const editCheckpointInfo = async (checkpointId: number, identificador: string, latitude: number, longitude: number) => {
+  try {
     const { data, error } = await editCheckpointModel(checkpointId, identificador, latitude, longitude);
-    if (!error){
+    if (!error) {
       Alert.alert('Sucesso!', 'Ponto atualizado com sucesso!');
     }
-    else{
+    else {
       Alert.alert('Erro!', 'Erro, tente novamente!');
     }
   }
-  catch{
-    
+  catch {
+
   }
 };
 
 export const getCurrentCoordinates = async (): Promise<{ latitude: number; longitude: number } | null> => {
-    try {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        
-        if (status !== 'granted') {
-            console.error('Permissão de localização negada');
-            return null;
-        }
+  try {
+    let { status } = await Location.requestForegroundPermissionsAsync();
 
-        let location = await Location.getCurrentPositionAsync({});
-        
-        return {
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude
-        };
-        
-    } catch (error) {
-        console.error('Erro ao obter localização:', error);
-        return null;
+    if (status !== 'granted') {
+      console.error('Permissão de localização negada');
+      return null;
     }
+
+    let location = await Location.getCurrentPositionAsync({});
+    const coordinates: currentCoordinates = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude
+    }
+    return coordinates;
+
+  } catch (error) {
+    console.error('Erro ao obter localização:', error);
+    return null;
+  }
 };
 
-export const newCheckpoint = async (identificador: string, latitude:string, longitude:string) => {
-  try{
+export const newCheckpoint = async (identificador: string, latitude: string, longitude: string) => {
+  try {
     const { data, error } = await registerNewCheckpointModel(identificador, parseFloat(latitude), parseFloat(longitude));
-    if (error){
+    if (error) {
       Alert.alert('Erro ao registrar novo ponto!');
     }
-    else{
+    else {
       Alert.alert('Sucesso!', 'Novo ponto registrado com sucesso!');
     }
   }
-  catch(error){
+  catch (error) {
     console.log(error);
   }
 

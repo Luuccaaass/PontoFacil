@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-
+import { currentCoordinates } from "./CheckPointController";
 
 export type PropsStackRoutes = {
     Cadastro:undefined;
@@ -35,8 +35,10 @@ export type PropsStackRoutes = {
     };
 
     NewCheckpoint:{
-        
-    }
-}
+        latitude:number,
+        longitude:number,
+    };
+
+};
 
 export type PropsScreenApps <T extends keyof PropsStackRoutes>= NativeStackScreenProps<PropsStackRoutes, T>

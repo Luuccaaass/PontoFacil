@@ -83,10 +83,10 @@ export const getCollabList = async (): Promise<Collab[] | null> => {
 export const editCollab = async (id: number, navigation: any) => {
     try {
         const { data, error } = await getDadosModel(id);
-        if (data){
-            navigation.navigate('EditCollabInfo', {CollabId:id, cpf:data.CPF, usuario:data.nome, cargo:data.cargo, salario:data.salario})
+        if (data) {
+            navigation.navigate('EditCollabInfo', { CollabId: id, cpf: data.CPF, usuario: data.nome, cargo: data.cargo, salario: data.salario })
         }
-        else{
+        else {
             Alert.alert('Erro!', 'Houve algum erro! Tente novamente!')
         }
     }
@@ -96,33 +96,33 @@ export const editCollab = async (id: number, navigation: any) => {
 
 };
 
-export const updateCollabInfo = async (collabId:number, cpf:number, nome:string, cargo:string, salario: number) => {
-    try{
+export const updateCollabInfo = async (collabId: number, cpf: number, nome: string, cargo: string, salario: number) => {
+    try {
         const { data, error } = await updateCollabInfoModel(collabId, cpf, nome, cargo, salario);
-        if (data){
+        if (data) {
             Alert.alert('Atualizado!', 'Os dados do funcionário foram atualizados com sucesso!')
         }
-        else{
+        else {
             Alert.alert('Erro!', 'Houve algum erro! Tente novamente!');
         }
     }
-    catch{
+    catch {
 
     }
 };
 
-export const deleteCollab = async (collabId:number) => {
-    try{
+export const deleteCollab = async (collabId: number) => {
+    try {
         const { data, error } = await deleteCollabModel(collabId);
-        if (!error){
+        if (!error) {
             Alert.alert('Sucesso!', 'Funcionario desligado com sucesso!');
         }
-        else if (error){
+        else if (error) {
             console.log(error)
         }
     }
-    catch{
+    catch {
 
     }
 
-}
+};

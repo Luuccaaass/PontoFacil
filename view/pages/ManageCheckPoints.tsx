@@ -5,20 +5,24 @@ import GlobalStyles from "view/styles/GlobalStyles";
 import { getCollabList, Collab } from "controller/FuncionarioController";
 import { CollabStyle } from "view/styles/CollabListView";
 import { useFocusEffect } from "@react-navigation/native";
-import { getCheckpointList, Checkpoint } from "controller/CheckPointController";
+import { getCheckpointList, Checkpoint, getCurrentCoordinates, currentCoordinates } from "controller/CheckPointController";
 
 
 export const ManageCheckpoints = ({ navigation, route }: PropsScreenApps<'ManageCheckpoints'>) => {
-
     const [checkPoint, setCheckPoint] = useState<Checkpoint[]>([]);
+    const [coordinate, setCoordinate] = useState<currentCoordinates>();
 
     useFocusEffect(
         useCallback(() => {
             const loadData = async () => {
                 try {
-                    const data = await getCheckpointList();
-                    if (data) {
-                        setCheckPoint(data);
+                    const checkpointListData = await getCheckpointList();
+                    if (checkpointListData) {
+                        setCheckPoint(checkpointListData);
+                    }
+                    const coordinateData = await getCurrentCoordinates();
+                    if (coordinateData){
+                        setCoordinate(coordinateData);
                     }
                 } catch (error) {
                     console.log(error);
@@ -62,7 +66,7 @@ export const ManageCheckpoints = ({ navigation, route }: PropsScreenApps<'Manage
             </View>
             <TouchableOpacity
                 style={GlobalStyles.botao}
-                onPress={() => navigation.navigate('NewCheckpoint', {})}
+                onPress={() => navigation.navigate('NewCheckpoint', {latitude:coordinate?.latitude??0, longitude:coordinate?.longitude??0})}
             >
                 <Text style={GlobalStyles.textoBotao}>Registrar novo ponto</Text>
             </TouchableOpacity>

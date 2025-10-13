@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Text, View, Alert, Image, TouchableOpacity, ScrollView } from "react-native";
 import GlobalStyles from "view/styles/GlobalStyles";"../styles/GlobalStyles";
 import PainelStyles from "view/styles/PainelStyles"; "../styles/PainelStyles"
 import { PropsScreenApps } from "../../controller/Interfaces";
 import { PainelController, PontoAgrupado, Coordenadas } from "../../controller/PainelController";
+import { useFocusEffect } from "@react-navigation/native";
 
 const PainelFuncionario = ({ navigation, route }: PropsScreenApps<'PainelSup'>) => {
     const userId = route.params.userId;
@@ -11,8 +12,11 @@ const PainelFuncionario = ({ navigation, route }: PropsScreenApps<'PainelSup'>) 
     const [localizacao, setLocalizacao] = useState<Coordenadas>({ latitude: '0', longitude: '0' });
     const [pontosAgrupados, setPontosAgrupados] = useState<PontoAgrupado[]>([]);
 
-    useEffect(() => {
-        const buscarDados = async () => {
+
+
+    useFocusEffect(
+    useCallback(() => {
+        const loadData = async() => {
             try {
                 const dados = await PainelController.carregarDadosPainel(userId);
                 
@@ -20,12 +24,14 @@ const PainelFuncionario = ({ navigation, route }: PropsScreenApps<'PainelSup'>) 
                 setLocalizacao(dados.localizacao);
                 setPontosAgrupados(dados.pontosAgrupados);
             } catch (error) {
-                Alert.alert("Erro ao buscar dados do funcionário!");
                 console.error('Erro ao carregar dados:', error);
+                Alert.alert("Erro ao buscar dados do funcionário!");
+
             }
         };
-        buscarDados();
-    }, [userId]);
+        loadData();
+    }, [userId])
+);
 
 
     return (

@@ -12,30 +12,30 @@ import { Alert } from "react-native";
 import { getCurrentCoordinates } from "controller/CheckPointController";
 import { Image } from "@rneui/base";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
-//const [checkpoint, setCheckpoint] = useState<number>();
-
+import Map, { Marker, MapPressEvent } from "react-native-maps";
+import { currentCoordinates } from "controller/CheckPointController";
 
 
 export const NewCheckpoint = ({ navigation, route }: PropsScreenApps<'NewCheckpoint'>) => {
     const [latitude, setLatitude] = useState<string>('');
     const [longitude, setLongitude] = useState<string>('');
     const [checkPointName, setCheckpointName] = useState<string>('');
+    const [currentPosition, setCurrentPosition] = useState<currentCoordinates>({ latitude: route.params.latitude, longitude: route.params.longitude });
 
     const handleGetCurrentLocation = async () => {
-        try {
-            const coords = await getCurrentCoordinates();
+        setLatitude(currentPosition.latitude.toFixed(6).toString());
+        setLongitude(currentPosition.longitude.toFixed(6).toString());
+    };
 
-            if (coords) {
-                setLatitude(coords.latitude.toFixed(4).toString());
-                setLongitude(coords.longitude.toFixed(4).toString());
-            } else {
-                Alert.alert('Erro', 'Não foi possível obter a localização atual');
-            }
-        } catch (error) {
-            console.error('Erro ao obter localização:', error);
-            Alert.alert('Erro', 'Falha ao buscar localização');
-        }
+
+    const handleMapPress = (event: MapPressEvent) => {
+        const { coordinate } = event.nativeEvent;
+        setLatitude(coordinate.latitude.toFixed(6).toString());
+        setLongitude(coordinate.longitude.toFixed(6).toString());
+        setCurrentPosition({
+            latitude: coordinate.latitude,
+            longitude: coordinate.longitude
+        });
     };
 
     return (
@@ -50,7 +50,22 @@ export const NewCheckpoint = ({ navigation, route }: PropsScreenApps<'NewCheckpo
                     <Text style={GlobalStyles.headerTitleText}>Novo ponto</Text>
                 </View>
                 <View style={CheckpointStyle.MapPreview}>
+                    <Map
+                        style={{ height: '100%', width: '100%' }}
+                        initialRegion={{
+                            latitude: currentPosition?.latitude ?? 0,
+                            longitude: currentPosition?.longitude ?? 0,
+                            latitudeDelta: 0.005,
+                            longitudeDelta: 0.005,
 
+                        }}
+                        onPress={handleMapPress}>
+                        <Marker
+                            coordinate={{
+                                latitude: currentPosition?.latitude ?? 0,
+                                longitude: currentPosition?.longitude ?? 0
+                            }}></Marker>
+                    </Map>
                 </View>
                 <TextInput style={GlobalStyles.textInput}
                     placeholder="Nome do ponto"
@@ -86,11 +101,11 @@ export const NewCheckpoint = ({ navigation, route }: PropsScreenApps<'NewCheckpo
 
                 <TouchableOpacity
                     style={GlobalStyles.botao}
-                    onPress={() => {newCheckpoint(checkPointName, latitude, longitude)}}
+                    onPress={() => { newCheckpoint(checkPointName, latitude, longitude) }}
                 >
                     <Text style={GlobalStyles.textoBotao}>Registrar novo ponto</Text>
                 </TouchableOpacity>
             </View>
         </KeyboardAwareScrollView>
     )
-}
+} 
