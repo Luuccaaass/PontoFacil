@@ -1,6 +1,6 @@
-import { getDadosFuncionario } from "./FuncionarioController";
+import { getUserData } from "./EmployeeController";
 import { getDeviceLocation, getCheckpointsByFunc } from "./CheckPointController";
-import { formatarData, formatarHora } from "./ContentFormatController";
+import { formatDate, formatTime } from "./ContentFormatController";
 
 export interface Ponto {
     data: string;
@@ -8,10 +8,10 @@ export interface Ponto {
     local_id: number;
 }
 
-export interface PontoAgrupado {
+export interface DailyCheckpoints {
     data: string;
-    dataFormatada: string;
-    horarios: string[];
+    formattedDate: string;
+    checkInTimes: string[];
 }
 
 export interface Coordenadas {
@@ -19,9 +19,9 @@ export interface Coordenadas {
     longitude: string;
 }
 
-export class PainelController {
-    static async carregarDadosPainel(id: number) {
-        const resposta = await getDadosFuncionario(id);
+export class DashboardController {
+    static async loadDashboardData(id: number) {
+        const userData = await getUserData(id);
         const coords = await getDeviceLocation();
         const tempData = await getCheckpointsByFunc(id);
 
@@ -33,31 +33,31 @@ export class PainelController {
             };
         }
 
-        let pontosAgrupados: PontoAgrupado[] = [];
+        let groupedCheckpoints: DailyCheckpoints[] = [];
         if (tempData) {
-            pontosAgrupados = this.agruparPontosPorData(tempData);
+            groupedCheckpoints = this.checkpointsByData(tempData);
         }
 
         return {
-            dadosFuncionario: resposta,
+            dadosFuncionario: userData,
             localizacao,
-            pontosAgrupados
+            pontosAgrupados: groupedCheckpoints
         };
     }
 
-    private static agruparPontosPorData(pontos: Ponto[]): PontoAgrupado[] {
-        const agrupados: { [key: string]: PontoAgrupado } = {};
+    private static checkpointsByData(pontos: Ponto[]): DailyCheckpoints[] {
+        const agrupados: { [key: string]: DailyCheckpoints } = {};
 
         pontos.forEach(ponto => {
             if (ponto.data && ponto.hora) {
                 if (!agrupados[ponto.data]) {
                     agrupados[ponto.data] = {
                         data: ponto.data,
-                        dataFormatada: formatarData(ponto.data),
-                        horarios: []
+                        formattedDate: formatDate(ponto.data),
+                        checkInTimes: []
                     };
                 }
-                agrupados[ponto.data].horarios.push(formatarHora(ponto.hora));
+                agrupados[ponto.data].checkInTimes.push(formatTime(ponto.hora));
             }
         });
 

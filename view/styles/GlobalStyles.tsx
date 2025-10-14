@@ -1,23 +1,18 @@
-import { StyleSheet } from "react-native";
-import { DefaultAppColors } from "./DefaultColors";
+import { StyleSheet } from 'react-native';
+import { DefaultAppColors } from './DefaultColors';
 
 export default StyleSheet.create({
-    container: {
+    Container: {
         flex:1,
         alignItems: 'center',
         backgroundColor: DefaultAppColors.color.cinzaApp,
-    },
-    
-    boxHeaderUserInfo: {
-        flexDirection:'row',
-        backgroundColor: DefaultAppColors.color.laranjaApp,
-        width: '100%',
-        height:200,
+        paddingHorizontal: '5%',
+        paddingVertical: '2%',
     },
 
-    textInput: {    
-        borderBottomColor: 'black',
-        width:'90%',
+    TextInput: {    
+        borderBottomColor: DefaultAppColors.color.defaultBlack,
+        width:'100%',
         borderWidth:0,
         height:50,
         borderBottomWidth:2,
@@ -26,45 +21,50 @@ export default StyleSheet.create({
         marginBottom:20,
     },
 
-    botao: {
+    Button: {
         backgroundColor: DefaultAppColors.color.laranjaApp,
-        width:350,
+        width:'100%',
         height:65,
         borderRadius:20,
         justifyContent: 'center',
-        textAlign: 'right',
-        borderBlockColor:'black',
+        borderBlockColor: DefaultAppColors.color.defaultBlack,
         marginTop:30,
     },
 
-    botaoLink: {
+    LinkButton: {
         marginTop: 20,
     },
 
-    textLink:{
+    TextLink:{
         textAlign: 'center',
         justifyContent: 'center',
-        color: 'black'
+        color: DefaultAppColors.color.defaultBlack,
     },
 
-    textoBotao: {
-        color: 'black',
+    ButtonText: {
+        color: DefaultAppColors.color.defaultBlack,
         fontSize:20,
         textAlign:'center',
     },
 
-    headerTitleText:{
+    HeaderTitleText:{
         fontSize:32,
         padding:15,
         fontWeight: 'bold',
     },
 
-        headerInfoContent:{
+
+    HeaderLabel:{
         flexDirection:'row',
         backgroundColor: DefaultAppColors.color.laranjaApp,
         width: '100%',
-        height:200,
+        height: '12%',
         alignItems: 'flex-end',
     },
-    
-})
+
+    ScreenView: {
+        flex: 1,
+        height:'100%',
+        width: '100%'
+    },
+});

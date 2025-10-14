@@ -1,40 +1,18 @@
-import { StyleSheet } from "react-native"
+import { StyleSheet } from 'react-native'
+import { DefaultAppColors } from './DefaultColors'
 
 export default StyleSheet.create({
-modalContainer: {
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: 'rgba(0,0,0,0.5)',
-},
-modalContent: {
-  width: '80%',
-  backgroundColor: 'white',
-  padding: 20,
-  borderRadius: 10,
-},
-modalText: {
-  fontSize: 18,
-  marginBottom: 10,
-},
-qrData: {
-  fontSize: 16,
-  color: '#333',
-  marginBottom: 20,
-},
-modalButton: {
-  backgroundColor: '#0066cc',
-  padding: 10,
-  borderRadius: 5,
-  alignSelf: 'center',
-},
-coordsContainer: {
-  flexDirection: 'row',
-  backgroundColor: 'blue',
-  height: 70,
-  width: '80%'
-},
+  qrScanContainer: {
+    flex: 1,
+    backgroundColor: DefaultAppColors.color.defaultBlack,
+  },
+  QRCodeScannerContainer: {
+    flex: 1,
+    backgroundColor: DefaultAppColors.color.defaultBlack,
+  },
 
-
-
+  QRCodeScannerText: {
+    color: DefaultAppColors.color.defaultWhite,
+    fontSize: 16,
+  },
 })

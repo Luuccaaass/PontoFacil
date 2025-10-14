@@ -1,37 +1,45 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { currentCoordinates } from "./CheckPointController";
+import { CurrentLocation } from "./CheckPointController";
 
 export type PropsStackRoutes = {
-    Cadastro:undefined;
+    SignUp:undefined;
+
     Login:undefined;
-    PainelFunc: {
+    
+    EmployeeDashboard: {
         userId: number;
     };
-    RegistroPonto: {
+
+    CheckPointScan: {
         userId:number;
     };
-    PainelSup: {
+
+    SupDashboard: {
         userId: number;
     };
-    ManageCollabs: {
+
+    ManageEmployees: {
         userId:number;
     };
+
     ManageCheckpoints: {
 
     };
-    CollabCheckpointView:{
-        CollabId:number,
+
+    EmployeeOverview:{
+        employeeId:number,
     };
 
-    EditCollabInfo: {
+    EditEmployeeInfo: {
         CollabId:number,
         cpf:number,
-        usuario:string,
-        cargo:string,
-        salario:number,
+        name:string,
+        role:string,
+        salary:number,
     };
+
     EditCheckpoint: {
-        checkPpointId: number,
+        checkpointId: number,
     };
 
     NewCheckpoint:{
@@ -41,4 +49,4 @@ export type PropsStackRoutes = {
 
 };
 
-export type PropsScreenApps <T extends keyof PropsStackRoutes>= NativeStackScreenProps<PropsStackRoutes, T>
+export type PropsScreenApps <T extends keyof PropsStackRoutes>=NativeStackScreenProps<PropsStackRoutes, T>

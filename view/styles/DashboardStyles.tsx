@@ -1,29 +1,22 @@
-import { StyleSheet } from "react-native";
-import { DefaultAppColors } from "./DefaultColors";
+import { StyleSheet } from 'react-native';
+import { DefaultAppColors } from './DefaultColors';
 
 export default StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: DefaultAppColors.color.cinzaApp,
-        height: '100%',
-        width: '100%',
-    },
-
-    headerUserInfo: {
+    HeaderUserInfo: {
         flexDirection: 'row',
         backgroundColor: DefaultAppColors.color.laranjaApp,
         width: '100%',
         height: '20%',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        padding: 20,
+        paddingVertical: 20,
+        paddingHorizontal: '5%',
         flexGrow:0,
         flexShrink: 0,
         overflow: 'hidden',
     },
 
-    iconeFuncionario: {
+    UserIcon: {
         height: 100,
         width: 100,
         borderColor: DefaultAppColors.color.defaultBlack,
@@ -31,31 +24,26 @@ export default StyleSheet.create({
         borderRadius: 50,
     },
 
-    boxInformacoes: {
+    InfoBox: {
         textAlign: 'center',
         justifyContent: 'flex-start',
         width: '55%',
         height: '80%',
-        paddingLeft: 20,
+        paddingLeft: '5%',
         marginTop: 50,
         flex: 0,
     },
 
-    boxPontosView: {
+    CheckInButtonContainer: {
         backgroundColor: DefaultAppColors.color.cinzaApp,
         height: '15%',
         width: '100%',
-        padding: 20,
+        paddingVertical: 20,
+        paddingHorizontal: '5%',
     },
 
-    boxPonto: {
-        height: 80,
-        width: '100%',
-        borderBottomColor: DefaultAppColors.color.defaultBlack,
-        borderBottomWidth: 2,
-    },
 
-    linhaPontos: {
+    CheckpointLine: {
         flexDirection: 'row',
         height: '70%',
         alignItems: 'center',
@@ -63,7 +51,7 @@ export default StyleSheet.create({
         paddingHorizontal: 20,
     },
 
-    preenchimentoHorarioPonto: {
+    CheckInTime: {
         height: '80%',
         width: '20%',
         justifyContent: 'center',
@@ -72,38 +60,37 @@ export default StyleSheet.create({
         borderRadius: 8,
     },
 
-    boxTable: {
+    TableBox: {
         height: '65%',
         flex:0,
 
     },
 
-    tableContainer: {
+    TableContainer: {
         flex: 1,
         backgroundColor: DefaultAppColors.color.cinzaApp,
         overflow: 'hidden',
+        width:'90%',
     },
 
-
-    scrollView: {
+    ScrollViewStyle: {
         flex: 1,
-        paddingHorizontal: 16,
     },
 
-    diaContainer: {
+    DayRowContainer: {
         marginVertical: 12,
         borderBottomWidth: 1,
         borderBottomColor: DefaultAppColors.color.defaultBlack,
         paddingBottom: 12,
-        width:'90%',
+        width:'100%',
         flex: 0,
         maxHeight: 80
     },
 
-    dataTexto: {
+    DateText: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#333',
+        color: DefaultAppColors.color.defaultBlack,
         marginBottom: 8,
     },
 
@@ -112,9 +99,9 @@ export default StyleSheet.create({
         flexDirection: 'row',
     },
 
-    horarioTexto: {
+    checkInTimeText: {
         fontSize: 16,
-        color: '#666',
+        color: DefaultAppColors.color.defaultGray,
         paddingVertical: 2,
         backgroundColor: DefaultAppColors.color.laranjaApp,
         width: 50,
@@ -125,26 +112,26 @@ export default StyleSheet.create({
         flex: 0,
     },
 
-    emptyState: {
+    EmptyState: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 40,
     },
 
-    emptyText: {
+    EmptyText: {
         fontSize: 16,
-        color: '#333',
+        color: DefaultAppColors.color.defaultBlack,
         textAlign: 'center',
     },
 
-    horariosScrollView: {
+    TimesScrollView: {
         flexGrow: 0, 
         height: 40,
         maxHeight: 40,
     },
 
-    horariosContentContainer: {
+    CheckInTimeContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         height:40,
@@ -152,27 +139,26 @@ export default StyleSheet.create({
         flex: 0,
     },
 
-    horarioItem: {
+    TimeItem: {
         flexDirection: 'row',
         alignItems: 'center',
         flex: 0,
     },
 
-    separador: {
+    Separator: {
         fontSize: 16,
-        color: '#999',
+        color: DefaultAppColors.color.defaultGray,
         marginHorizontal: 4,
     },
 
-    editButton:{
+    EditButton:{
         height: '80%',
         width: '20%',
         marginTop: 50,
-        ///justifyContent: 'center',
         alignItems: 'center',
     },
 
-    imageButton:{
+    ImageButton:{
         height: 42,
         width: 42,
         borderWidth: 2,

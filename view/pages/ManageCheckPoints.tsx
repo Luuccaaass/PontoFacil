@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { PropsScreenApps } from "controller/Interfaces";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
-import GlobalStyles from "view/styles/GlobalStyles";
-import { getCollabList, Collab } from "controller/FuncionarioController";
-import { CollabStyle } from "view/styles/CollabListView";
-import { useFocusEffect } from "@react-navigation/native";
-import { getCheckpointList, Checkpoint, getCurrentCoordinates, currentCoordinates } from "controller/CheckPointController";
+import React, { useState, useCallback } from 'react';
+import { PropsScreenApps } from 'controller/Interfaces';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import GlobalStyles from 'view/styles/GlobalStyles';
+import EmployeeListView from 'view/styles/ListView';
+import { useFocusEffect } from '@react-navigation/native';
+import { getCheckpointList, Checkpoint, CurrentLocation, getDeviceLocation } from 'controller/CheckPointController';
 
 
 export const ManageCheckpoints = ({ navigation, route }: PropsScreenApps<'ManageCheckpoints'>) => {
-    const [checkPoint, setCheckPoint] = useState<Checkpoint[]>([]);
-    const [coordinate, setCoordinate] = useState<currentCoordinates>();
+    const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([]);
+    const [currentCoordinate, setCurrentCoordinate] = useState<CurrentLocation>();
 
     useFocusEffect(
         useCallback(() => {
@@ -18,11 +17,11 @@ export const ManageCheckpoints = ({ navigation, route }: PropsScreenApps<'Manage
                 try {
                     const checkpointListData = await getCheckpointList();
                     if (checkpointListData) {
-                        setCheckPoint(checkpointListData);
+                        setCheckpoints(checkpointListData);
                     }
-                    const coordinateData = await getCurrentCoordinates();
-                    if (coordinateData){
-                        setCoordinate(coordinateData);
+                    const coordinateData = await getDeviceLocation();
+                    if (coordinateData) {
+                        setCurrentCoordinate(coordinateData);
                     }
                 } catch (error) {
                     console.log(error);
@@ -32,44 +31,53 @@ export const ManageCheckpoints = ({ navigation, route }: PropsScreenApps<'Manage
         }, [])
     );
 
-    const pontosOrdenados = [...checkPoint].sort((a, b) => a.id - b.id);
+    const sortedCheckpoints = [...checkpoints].sort((a, b) => a.id - b.id);
 
-    const renderFunc = ({ item }: { item: Checkpoint }) => {
+    const renderCheckpoint = ({ item }: { item: Checkpoint }) => {
         return (
             <TouchableOpacity
-                style={CollabStyle.row}
-                onPress={() => { navigation.navigate('EditCheckpoint', { checkPpointId: item.id }) }}
+                style={EmployeeListView.Row}
+                onPress={() => { navigation.navigate('EditCheckpoint', { checkpointId: item.id }) }}
             >
-                <Text style={CollabStyle.cellId}>{item.id}</Text>
-                <Text style={CollabStyle.cellSeparator}>|</Text>
-                <Text style={CollabStyle.cellName}>{item.identificador}</Text>
+                <Text style={EmployeeListView.CellId}>{item.id}</Text>
+                <Text style={EmployeeListView.CellSeparator}>|</Text>
+                <Text style={EmployeeListView.CellName}>{item.identificador}</Text>
             </TouchableOpacity>
         );
     };
 
+    const handleRegisterNewCheckpoint = () => {
+        if (currentCoordinate?.latitude && currentCoordinate.longitude) {
+            navigation.navigate('NewCheckpoint', { latitude: currentCoordinate.latitude, longitude: currentCoordinate.longitude });
+        }
+    };
+
     return (
-        <View style={GlobalStyles.container}>
-            <View style={[GlobalStyles.headerInfoContent, { height: 120 }]}>
-                <Text style={GlobalStyles.headerTitleText}>Gerenciar pontos</Text>
+        <View style={GlobalStyles.ScreenView}>
+            <View style={GlobalStyles.HeaderLabel}>
+                <Text style={GlobalStyles.HeaderTitleText}>Gerenciar pontos</Text>
             </View>
-            <View style={[CollabStyle.CollabList, { height: '72%' }]}>
-                <View style={CollabStyle.row}>
-                    <Text style={CollabStyle.cellId}>ID</Text>
-                    <Text style={CollabStyle.cellSeparator} />
-                    <Text style={CollabStyle.cellName}>Nome</Text>
+            <View style={GlobalStyles.Container}>
+
+                <View style={EmployeeListView.CheckPointList}>
+                    <View style={EmployeeListView.Row}>
+                        <Text style={EmployeeListView.CellId}>ID</Text>
+                        <Text style={EmployeeListView.CellSeparator} />
+                        <Text style={EmployeeListView.CellName}>Nome</Text>
+                    </View>
+                    <FlatList
+                        data={sortedCheckpoints}
+                        renderItem={renderCheckpoint}
+                        keyExtractor={item => item.id.toString()}
+                    />
                 </View>
-                <FlatList
-                    data={pontosOrdenados}
-                    renderItem={renderFunc}
-                    keyExtractor={item => item.id.toString()}
-                />
+                <TouchableOpacity
+                    style={GlobalStyles.Button}
+                    onPress={handleRegisterNewCheckpoint}
+                >
+                    <Text style={GlobalStyles.ButtonText}>Registrar novo ponto</Text>
+                </TouchableOpacity>
             </View>
-            <TouchableOpacity
-                style={GlobalStyles.botao}
-                onPress={() => navigation.navigate('NewCheckpoint', {latitude:coordinate?.latitude??0, longitude:coordinate?.longitude??0})}
-            >
-                <Text style={GlobalStyles.textoBotao}>Registrar novo ponto</Text>
-            </TouchableOpacity>
         </View>
     );
 };

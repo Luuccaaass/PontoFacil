@@ -1,7 +1,7 @@
 import React from "react";
 
 // Função para formatar data - Versão mais robusta
-export const formatarData = (dataString: string): string => {
+export const formatDate = (dataString: string): string => {
     try {
         // Adiciona o timezone para garantir que use o fuso horário local
         const data = new Date(dataString + 'T12:00:00'); // Meio-dia para evitar problemas de fuso
@@ -28,7 +28,7 @@ export const formatarData = (dataString: string): string => {
 
 
 // Função para formatar hora (remove segundos)
-export const formatarHora = (horaString: string): string => {
+export const formatTime = (horaString: string): string => {
     return horaString.substring(0, 5); // Pega apenas HH:MM
 }; 
 

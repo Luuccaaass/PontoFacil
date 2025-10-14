@@ -36,7 +36,7 @@ export const getCollabListModel = async () => {
     .from('func')
     .select('id, nome')
 
-    return { data, error }
+    return {data, error}
 };
 
 export const updateCollabInfoModel = async (collabId:number, cpf:number, nome:string, cargo:string, salario: number) => {

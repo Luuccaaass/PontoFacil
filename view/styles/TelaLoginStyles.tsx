@@ -1,46 +1,29 @@
-import { Picker } from "@react-native-picker/picker";
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
+import { DefaultAppColors } from './DefaultColors';
 
-const laranjaApp = "#FF6800";
-const cinzaApp = "#B9B9B9";
-const verdeApp = "#6C64C8";
 
 export default StyleSheet.create({
-    textInput: {    
-        borderBottomColor: 'black',
-        width:350,
-        borderWidth:0,
-        height:50,
-        borderBottomWidth:2,
-        padding:10,
-        backgroundColor:cinzaApp,
-        marginBottom:20,
-
-    },
-
-    iconeAplicativo: {
+    AppIcon: {
         height:200,
         width:200,
     },
 
-    textoTitulo: {
+    LabelText: {
         fontSize:40,
         marginBottom:20,
         marginTop:80,
     },
 
-    dropDownContainer: {    
-        borderBottomColor: 'black',
-        width:350,
+    DropDownContainer: {    
+        borderBottomColor: DefaultAppColors.color.defaultBlack,
+        width: '100%',
         borderWidth:0,
         height:50,
         borderBottomWidth:2,
-        backgroundColor:cinzaApp,
+        backgroundColor:DefaultAppColors.color.cinzaApp,
         marginBottom:20,
         alignContent: 'center',
-        justifyContent:"center",
+        justifyContent:'center',
         textAlign:'left'
     },
-
-
 })

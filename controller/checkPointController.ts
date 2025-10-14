@@ -1,12 +1,7 @@
 import { Text, Alert } from "react-native"
 import * as Location from 'expo-location'
-import { ColorProperties } from "react-native-reanimated/lib/typescript/Colors";
 import { getDataPonto, registrarPonto, getPontos } from "model/RegistroPontoModel";
-import { registerLoggerConfig } from "react-native-reanimated/lib/typescript/logger";
 import { editCheckpointModel, getCheckpointInfo, getCheckpointListModel, registerNewCheckpointModel } from "model/CheckPointManage";
-import * as FileSystem from 'expo-file-system';
-import * as MediaLibrary from 'expo-media-library';
-
 
 const maxDistanceAccepted = 30;
 
@@ -21,7 +16,7 @@ export interface local_ponto {
   id: number;
 };
 
-export interface currentCoordinates {
+export interface CurrentLocation {
   latitude: number,
   longitude: number
 };
@@ -35,10 +30,8 @@ function toRadians(degrees: number): number {
 
 //recebe a string do QR Code e transforma em um vetor com [ latitude, longitude, id ]
 export const splitCoord = (valor: string): local_ponto | null => {
-  // Remove espaços no início/fim e divide apenas por vírgula (sem espaços opcionais)
   const partes = valor.trim().split(',');
 
-  // Esperamos exatamente 3 partes
   if (partes.length !== 3) {
     return null;
   }
@@ -47,7 +40,6 @@ export const splitCoord = (valor: string): local_ponto | null => {
   const longitude = parseFloat(partes[1]);
   const id = parseInt(partes[2], 10);
 
-  // Verifica se todas as conversões foram bem-sucedidas
   if (isNaN(latitude) || isNaN(longitude) || isNaN(id)) {
     return null;
   }
@@ -76,7 +68,11 @@ export const isValidCoordinate = (valorLido: string): boolean => {
 };
 
 //recebe o id, latitude e longitude e valida no banco de dados se essas coordenadas esta atrelada ao id recebido
-export const isValidCheckpoint = async (id: number, lat: number, long: number) => {
+export const isValidCheckpoint = async (
+  id: number,
+  lat: number,
+  long: number
+) => {
   const { data, error } = await getDataPonto(id);
   if (error) {
     console.log(`Erro ao buscar informacoes`, error);
@@ -94,21 +90,23 @@ export const isValidCheckpoint = async (id: number, lat: number, long: number) =
 };
 
 //valida o qr code --> calcula a distancia do funcionario para o ponto --> se a distancia for menor do que 30m ele registra o ponto
-export const recordCheckPoint = async (data: string, func_id: number) => {
+export const recordCheckPoint = async (
+  data: string,
+  func_id: number
+) => {
   const content = splitCoord(data);
   const local = await getDeviceLocation();
   const date = new Date();
   const fDate = date.toISOString().split('T')[0];
-  const fHour = date.toISOString().split(' ')[0];
+  const fHour = date.toLocaleTimeString(`pt-BR`);
   if (content && local) {
     const distance = getDistanceBetween(content?.latitude, content?.longitude, local?.latitude, local?.longitude)
     if (await isValidCheckpoint(content.id, content.latitude, content.longitude)) {
       if (distance <= maxDistanceAccepted) {
         const { data, error } = await registrarPonto(content.id, func_id, fDate, fHour);
         if (!error) {
-          return true;
           console.log(`Registrado!`);
-
+          return true;
         }
         else {
           console.log(`Erro ao registrar o ponto no banco de dados`, error); //a ser retirado na ultima versao
@@ -138,22 +136,19 @@ export const getDeviceLocation = async (): Promise<{
   longitude: number;
 } | null> => {
   try {
-    // 1. Verifica permissões
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       console.log("Permissão de localização negada");
       return null;
     }
-
-    // 2. Obtém a localização atual
     const location = await Location.getCurrentPositionAsync({
       accuracy: Location.Accuracy.High, // Precisão alta
     });
-
-    return {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-    };
+    const coordinates: CurrentLocation = {
+      latitude: parseFloat(location.coords.latitude.toFixed(6)),
+      longitude: parseFloat(location.coords.longitude.toFixed(6))
+    }
+    return coordinates;
 
   } catch (error) {
     console.error("Erro ao obter localização:", error);
@@ -161,27 +156,28 @@ export const getDeviceLocation = async (): Promise<{
   }
 };
 
-export const getDistanceBetween = (latA: number, longA: number, latB: number, longB: number) => {
-  const r = 6371000; // Raio da Terra em metros
+//recebe duas coordenadas e calcula a distancia em metros entre elas com a formula de Haversine
+export const getDistanceBetween = (
+  latA: number,
+  longA: number,
+  latB: number,
+  longB: number
+) => {
+  const r = 6371000;
 
-  // Converter todas as coordenadas para radianos
   const latRadA = toRadians(latA);
   const latRadB = toRadians(latB);
   const deltaLat = toRadians(latB - latA);
   const deltaLong = toRadians(longB - longA);
 
-  // Fórmula de Haversine:
-  // a = sin²(deltaLat/2) + cos(latRadA) × cos(latRadB) × sin²(deltaLong/2)
   const a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
     Math.cos(latRadA) * Math.cos(latRadB) *
     Math.sin(deltaLong / 2) * Math.sin(deltaLong / 2);
 
-  // c = 2 × atan2(√a, √(1−a))
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-  // Distância = Raio × Ângulo Central
   const d = r * c;
-  return parseFloat(d.toFixed(6)); // Retorna a distância calculada
+  return parseFloat(d.toFixed(6));
 };
 
 export const getCheckpointsByFunc = async (id: number) => {
@@ -199,6 +195,7 @@ export const getCheckpointsByFunc = async (id: number) => {
   }
 };
 
+//retorna uma lista com todos os pontos
 export const getCheckpointList = async (): Promise<Checkpoint[] | null> => {
   try {
     const { data, error } = await getCheckpointListModel();
@@ -213,7 +210,7 @@ export const getCheckpointList = async (): Promise<Checkpoint[] | null> => {
   }
 };
 
-
+//busca as informacoes de um ponto a partir do id
 export const getCheckPointInfo = async (checkpointId: number) => {
   try {
     const { data, error } = await getCheckpointInfo(checkpointId);
@@ -230,57 +227,54 @@ export const getCheckPointInfo = async (checkpointId: number) => {
   }
 };
 
-export const editCheckpointInfo = async (checkpointId: number, identificador: string, latitude: number, longitude: number) => {
+//atualiza informacoes sobre um ponto
+export const editCheckpointInfo = async (
+  checkpointId: number,
+  identificador: string,
+  latitude: number,
+  longitude: number
+):Promise<boolean> => {
   try {
     const { data, error } = await editCheckpointModel(checkpointId, identificador, latitude, longitude);
     if (!error) {
-      Alert.alert('Sucesso!', 'Ponto atualizado com sucesso!');
+      return true
     }
     else {
-      Alert.alert('Erro!', 'Erro, tente novamente!');
+      return false
     }
   }
   catch {
-
+    return false
   }
+  return false
 };
 
-export const getCurrentCoordinates = async (): Promise<{ latitude: number; longitude: number } | null> => {
-  try {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-
-    if (status !== 'granted') {
-      console.error('Permissão de localização negada');
-      return null;
-    }
-
-    let location = await Location.getCurrentPositionAsync({});
-    const coordinates: currentCoordinates = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude
-    }
-    return coordinates;
-
-  } catch (error) {
-    console.error('Erro ao obter localização:', error);
-    return null;
-  }
-};
-
-export const newCheckpoint = async (identificador: string, latitude: string, longitude: string) => {
+//cria um novo ponto
+export const createNewCheckpoint = async (
+  identificador: string,
+  latitude: string,
+  longitude: string
+) => {
   try {
     const { data, error } = await registerNewCheckpointModel(identificador, parseFloat(latitude), parseFloat(longitude));
     if (error) {
-      Alert.alert('Erro ao registrar novo ponto!');
+      return false;
     }
     else {
-      Alert.alert('Sucesso!', 'Novo ponto registrado com sucesso!');
+      return true;
     }
   }
   catch (error) {
-    console.log(`Erro inesperado`, error);
+    return false;
   }
 
 };
 
-
+//formata as informacoees de um qr code para exibir em tela
+export const formatCheckpointQRData = (
+  latitude: number,
+  longitude: number,
+  checkpointId: number
+): string => {
+  return `${latitude},${longitude},${checkpointId}`;
+};

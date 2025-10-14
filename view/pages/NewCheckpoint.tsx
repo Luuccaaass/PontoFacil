@@ -1,30 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { PropsScreenApps } from "controller/Interfaces";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput } from "react-native";
-import GlobalStyles from "view/styles/GlobalStyles";
-import { getCollabList, Collab } from "controller/FuncionarioController";
-import { CollabStyle } from "view/styles/CollabListView";
-import { useFocusEffect } from "@react-navigation/native";
-import { getCheckpointList, Checkpoint, newCheckpoint } from "controller/CheckPointController";
-import { CheckpointStyle } from "view/styles/CheckpointStyle";
-import { local_ponto } from "controller/CheckPointController";
-import { Alert } from "react-native";
-import { getCurrentCoordinates } from "controller/CheckPointController";
-import { Image } from "@rneui/base";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import Map, { Marker, MapPressEvent } from "react-native-maps";
-import { currentCoordinates } from "controller/CheckPointController";
+import React, { useState } from 'react';
+import { PropsScreenApps } from 'controller/Interfaces';
+import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
+import GlobalStyles from 'view/styles/GlobalStyles';
+import { createNewCheckpoint, getDeviceLocation } from 'controller/CheckPointController';
+import { CheckpointStyle } from 'view/styles/CheckpointStyle';
+import { Image } from '@rneui/base';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Map, { Marker, MapPressEvent } from 'react-native-maps';
+import { CurrentLocation } from 'controller/CheckPointController';
 
 
 export const NewCheckpoint = ({ navigation, route }: PropsScreenApps<'NewCheckpoint'>) => {
+    const currentLat = route.params;
     const [latitude, setLatitude] = useState<string>('');
     const [longitude, setLongitude] = useState<string>('');
-    const [checkPointName, setCheckpointName] = useState<string>('');
-    const [currentPosition, setCurrentPosition] = useState<currentCoordinates>({ latitude: route.params.latitude, longitude: route.params.longitude });
+    const [checkpointName, setCheckpointName] = useState<string>('');
+    const [selectedPosition, setSelectedPosition] = useState<CurrentLocation>({ latitude: route.params.latitude, longitude: route.params.longitude });
 
-    const handleGetCurrentLocation = async () => {
-        setLatitude(currentPosition.latitude.toFixed(6).toString());
-        setLongitude(currentPosition.longitude.toFixed(6).toString());
+    const handleUseCurrentLocation = async () => {
+        setLatitude(currentLat.latitude.toString());
+        setLongitude(currentLat.longitude.toString());
+        setSelectedPosition({
+            latitude: currentLat.latitude,
+            longitude: currentLat.longitude
+        });
     };
 
 
@@ -32,29 +31,53 @@ export const NewCheckpoint = ({ navigation, route }: PropsScreenApps<'NewCheckpo
         const { coordinate } = event.nativeEvent;
         setLatitude(coordinate.latitude.toFixed(6).toString());
         setLongitude(coordinate.longitude.toFixed(6).toString());
-        setCurrentPosition({
+        setSelectedPosition({
             latitude: coordinate.latitude,
             longitude: coordinate.longitude
         });
     };
+
+    const handleNewCheckpoint = async () => {
+        if (checkpointName != '' && latitude != '' && longitude != '') {
+            const result = await createNewCheckpoint(checkpointName, latitude, longitude);
+            if (result) {
+                Alert.alert('Sucesso!', 'Novo ponto criado com sucesso!',
+                    [
+                        {
+                            onPress:()=>navigation.pop(1)
+                        }
+                    ]
+                )
+            }
+            else {
+                Alert.alert('Erro!', 'Não foi possível criar o ponto. Tente novamente!')
+            }
+        }
+        else{
+            Alert.alert('Erro!', 'Preencha todos os campos!')
+        }
+
+    };
+
 
     return (
         <KeyboardAwareScrollView
             contentContainerStyle={{ flex: 1 }}
             extraScrollHeight={100}
             enableOnAndroid={true}
-            keyboardShouldPersistTaps="handled"
+            keyboardShouldPersistTaps='handled'
         >
-            <View style={GlobalStyles.container}>
-                <View style={[GlobalStyles.headerInfoContent, { height: 120 }]}>
-                    <Text style={GlobalStyles.headerTitleText}>Novo ponto</Text>
-                </View>
-                <View style={CheckpointStyle.MapPreview}>
+            <View style={GlobalStyles.HeaderLabel}>
+                <Text style={GlobalStyles.HeaderTitleText}>Novo ponto</Text>
+            </View>
+            <View style={GlobalStyles.Container}>
+
+                <View style={CheckpointStyle.MapContainer}>
                     <Map
-                        style={{ height: '100%', width: '100%' }}
+                        style={CheckpointStyle.MapPreviewStyle}
                         initialRegion={{
-                            latitude: currentPosition?.latitude ?? 0,
-                            longitude: currentPosition?.longitude ?? 0,
+                            latitude: selectedPosition?.latitude ?? 0,
+                            longitude: selectedPosition?.longitude ?? 0,
                             latitudeDelta: 0.005,
                             longitudeDelta: 0.005,
 
@@ -62,48 +85,48 @@ export const NewCheckpoint = ({ navigation, route }: PropsScreenApps<'NewCheckpo
                         onPress={handleMapPress}>
                         <Marker
                             coordinate={{
-                                latitude: currentPosition?.latitude ?? 0,
-                                longitude: currentPosition?.longitude ?? 0
+                                latitude: selectedPosition?.latitude ?? 0,
+                                longitude: selectedPosition?.longitude ?? 0
                             }}></Marker>
                     </Map>
                 </View>
-                <TextInput style={GlobalStyles.textInput}
-                    placeholder="Nome do ponto"
-                    value={checkPointName}
+                <TextInput style={GlobalStyles.TextInput}
+                    placeholder='Nome do ponto'
+                    value={checkpointName}
                     onChangeText={(Text) => setCheckpointName(Text)}
                 ></TextInput>
-                <View style={CheckpointStyle.chekcpointInfoContainer}>
+                <View style={CheckpointStyle.ChekcpointInfoContainer}>
                     <TextInput
-                        style={CheckpointStyle.checkPointinfo}
-                        placeholder="Latitude"
+                        style={CheckpointStyle.CheckPointInfoContainer}
+                        placeholder='Latitude'
                         value={latitude}
                         onChangeText={setLatitude}
-                        keyboardType="numeric"
+                        keyboardType='numeric'
                         editable={true}
                     />
                     <TextInput
-                        style={CheckpointStyle.checkPointinfo}
-                        placeholder="Longitude"
+                        style={CheckpointStyle.CheckPointInfoContainer}
+                        placeholder='Longitude'
                         value={longitude}
                         onChangeText={setLongitude}
-                        keyboardType="numeric"
+                        keyboardType='numeric'
                         editable={true}
                     />
-                    <TouchableOpacity style={CheckpointStyle.getCurrentCoordsButton}
-                        onPress={handleGetCurrentLocation}>
+                    <TouchableOpacity style={CheckpointStyle.GetCurrentCoordsButton}
+                        onPress={handleUseCurrentLocation}>
                         <Image
                             source={require('../../src/images/getCurrentLocationIcon.png')}
-                            style={CheckpointStyle.getCurrentLocationIconButton}
+                            style={CheckpointStyle.GetCurrentLocationIconButton}
                         ></Image>
                     </TouchableOpacity>
 
                 </View>
 
                 <TouchableOpacity
-                    style={GlobalStyles.botao}
-                    onPress={() => { newCheckpoint(checkPointName, latitude, longitude) }}
+                    style={GlobalStyles.Button}
+                    onPress={handleNewCheckpoint}
                 >
-                    <Text style={GlobalStyles.textoBotao}>Registrar novo ponto</Text>
+                    <Text style={GlobalStyles.ButtonText}>Registrar novo ponto</Text>
                 </TouchableOpacity>
             </View>
         </KeyboardAwareScrollView>
