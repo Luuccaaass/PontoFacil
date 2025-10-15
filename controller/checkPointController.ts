@@ -2,6 +2,7 @@ import { Text, Alert } from "react-native"
 import * as Location from 'expo-location'
 import { getDataPonto, registrarPonto, getPontos } from "model/CheckpointDataModel";
 import { deleteCheckpointModel, editCheckpointModel, getCheckpointInfo, getCheckpointListModel, registerNewCheckpointModel } from "model/CheckPointManageModel";
+import { albumNeedsMigrationAsync } from "expo-media-library";
 
 const maxDistanceAccepted = 30;
 
@@ -98,7 +99,7 @@ export const isValidCheckpoint = async (
 export const recordCheckPoint = async (
   data: string,
   func_id: number
-) => {
+): Promise<checkPointRegisterResults> => {
   const content = splitCoord(data);
   const local = await getDeviceLocation();
   const date = new Date();
@@ -110,29 +111,47 @@ export const recordCheckPoint = async (
       if (distance <= maxDistanceAccepted) {
         const { data, error } = await registrarPonto(content.id, func_id, fDate, fHour);
         if (!error) {
-          console.log(`Registrado!`);
-          return true;
+          return ({
+            success: true
+          });
         }
         else {
-          console.log(`Erro ao registrar o ponto no banco de dados`, error); //a ser retirado na ultima versao
-          return false;
+          console.log('1')
+          return ({
+            success: false,
+            returnError: 'db_error'
+          })
         }
 
       }
       else {
-        console.log(`Distante`); //a ser retirado na ultima versao
-        return false;
+        console.log('2')
+        return ({
+          success: false,
+          returnError: 'far'
+        })
       }
     }
     else {
-      console.log(`Codigo invalido!`); //a ser retirado na ultima versao
-      return false;
+      console.log('3')
+      return ({
+        success: false,
+        returnError: 'invalid_code'
+      })
     }
   }
   else {
-    return false;
+    console.log('4')
+    return ({
+      success: false,
+      returnError: 'invalid_code'
+    })
   }
-  return false;
+  console.log('5')
+  return ({
+    success: false,
+    returnError: 'db_error'
+  })
 };
 
 //obtem a prosicao do gps retornando latitude e longitude
@@ -238,7 +257,7 @@ export const editCheckpointInfo = async (
   identificador: string,
   latitude: number,
   longitude: number
-):Promise<boolean> => {
+): Promise<boolean> => {
   try {
     const { data, error } = await editCheckpointModel(checkpointId, identificador, latitude, longitude);
     if (!error) {
@@ -286,17 +305,17 @@ export const formatCheckpointQRData = (
 
 
 //funcao para remover checkpoint
-export const deleteCheckpoint = async (checkpointId:number) => {
-  try{
-    const {data, error} = await deleteCheckpointModel(checkpointId);
-    if (!error){
+export const deleteCheckpoint = async (checkpointId: number) => {
+  try {
+    const { data, error } = await deleteCheckpointModel(checkpointId);
+    if (!error) {
       return true
     }
-    else{
+    else {
       return false
     }
   }
-  catch{
+  catch {
     return false
   }
 };

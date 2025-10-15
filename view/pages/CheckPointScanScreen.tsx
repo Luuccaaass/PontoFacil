@@ -21,26 +21,48 @@ export const CheckPointScanScreen = ({ navigation, route }: PropsScreenApps<'Che
 
   const handleBarCodeScanned = async ({ data }: { data: string }) => {
     setScanned(true);
-
-    if (await recordCheckPoint(data, userId)) {
-      Alert.alert('Sucesso!', 'Ponto registrado com sucesso!', 
+    const result = await recordCheckPoint(data, userId)
+    if (result.success === true) {
+      Alert.alert('Sucesso!', 'Ponto registrado com sucesso!',
         [
           {
-            onPress: () => {setScanned(false)}
+            onPress: () => { setScanned(false) }
           }
         ]
 
       );
     }
     else{
-      Alert.alert('Erro!', 'Erro ao registrar ponto!', 
+      if (result.returnError === 'far'){
+        Alert.alert('Erro!', 'O ponto está muito distante!',
         [
           {
-            onPress: () => {setScanned(false)}
+            onPress: () => { setScanned(false) }
           }
         ]
 
       );
+      }
+      else if (result.returnError === 'invalid_code'){
+        Alert.alert('Erro!', 'O código não é válido!',
+        [
+          {
+            onPress: () => { setScanned(false) }
+          }
+        ]
+
+      );
+      }
+      else{
+        Alert.alert('Erro!', 'Erro ao registrar ponto. Tente novamente!',
+        [
+          {
+            onPress: () => { setScanned(false) }
+          }
+        ]
+
+      );
+      }
     }
   };
 
@@ -59,7 +81,7 @@ export const CheckPointScanScreen = ({ navigation, route }: PropsScreenApps<'Che
   return (
     <View style={RegistroPonto.qrScanContainer}>
       <CameraView
-        style={{flex:1}}
+        style={{ flex: 1 }}
         facing={facing}
         barcodeScannerSettings={{
           barcodeTypes: ['qr'],
