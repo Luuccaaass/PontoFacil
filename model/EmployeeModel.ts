@@ -31,7 +31,7 @@ export const getDadosModel = async (idFunc: number) => {
     return {data, error};
 };
 
-export const getCollabListModel = async () => {
+export const getEmployeeListModel = async () => {
     const { data, error } = await supabaseConnection
     .from('func')
     .select('id, nome')

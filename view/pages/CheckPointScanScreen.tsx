@@ -5,6 +5,7 @@ import { recordCheckPoint } from 'controller/CheckPointController';
 import { PropsScreenApps } from '../../controller/Interfaces';
 import RegistroPonto from 'view/styles/RegistroPonto';
 import { CheckpointStyle } from 'view/styles/CheckpointStyle';
+import { checkPointRegisterResults } from 'controller/CheckPointController';
 
 export const CheckPointScanScreen = ({ navigation, route }: PropsScreenApps<'CheckPointScan'>) => {
 

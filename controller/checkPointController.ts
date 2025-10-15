@@ -1,7 +1,7 @@
 import { Text, Alert } from "react-native"
 import * as Location from 'expo-location'
-import { getDataPonto, registrarPonto, getPontos } from "model/RegistroPontoModel";
-import { editCheckpointModel, getCheckpointInfo, getCheckpointListModel, registerNewCheckpointModel } from "model/CheckPointManage";
+import { getDataPonto, registrarPonto, getPontos } from "model/CheckpointDataModel";
+import { deleteCheckpointModel, editCheckpointModel, getCheckpointInfo, getCheckpointListModel, registerNewCheckpointModel } from "model/CheckPointManageModel";
 
 const maxDistanceAccepted = 30;
 
@@ -10,7 +10,7 @@ export interface Checkpoint {
   identificador: string,
 };
 
-export interface local_ponto {
+export interface CheckpointInfo {
   latitude: number;
   longitude: number;
   id: number;
@@ -21,6 +21,11 @@ export interface CurrentLocation {
   longitude: number
 };
 
+export interface checkPointRegisterResults {
+  success: boolean,
+  returnError?: 'far' | 'db_error' | 'invalid_code',
+}
+
 
 //converte graus para radianos
 function toRadians(degrees: number): number {
@@ -29,7 +34,7 @@ function toRadians(degrees: number): number {
 };
 
 //recebe a string do QR Code e transforma em um vetor com [ latitude, longitude, id ]
-export const splitCoord = (valor: string): local_ponto | null => {
+export const splitCoord = (valor: string): CheckpointInfo | null => {
   const partes = valor.trim().split(',');
 
   if (partes.length !== 3) {
@@ -277,4 +282,21 @@ export const formatCheckpointQRData = (
   checkpointId: number
 ): string => {
   return `${latitude},${longitude},${checkpointId}`;
+};
+
+
+//funcao para remover checkpoint
+export const deleteCheckpoint = async (checkpointId:number) => {
+  try{
+    const {data, error} = await deleteCheckpointModel(checkpointId);
+    if (!error){
+      return true
+    }
+    else{
+      return false
+    }
+  }
+  catch{
+    return false
+  }
 };

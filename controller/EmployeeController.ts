@@ -1,5 +1,5 @@
 import { Alert } from 'react-native';
-import { cadastrarFuncionarioModel, getDadosModel, getDadosLogin, getCollabListModel, updateCollabInfoModel, deleteCollabModel } from '../model/FuncionarioModel';
+import { cadastrarFuncionarioModel, getDadosModel, getDadosLogin, getEmployeeListModel, updateCollabInfoModel, deleteCollabModel } from '../model/EmployeeModel';
 
 export interface Employee {
     id: number,
@@ -107,7 +107,7 @@ export const getUserData = async (id: number) => {
 
 export const getEmployeeList = async (): Promise<Employee[] | null> => {
     try {
-        const { data, error } = await getCollabListModel();
+        const { data, error } = await getEmployeeListModel();
         if (error) {
             console.error(error);
             return null;

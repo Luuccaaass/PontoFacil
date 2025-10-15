@@ -41,3 +41,12 @@ export const registerNewCheckpointModel = async(identificador:string, latitude:n
     });
     return { data, error };
 };
+
+export const deleteCheckpointModel = async(checkpointId:number) =>  {
+    const { data, error } = await supabaseConnection
+    .from('local_pontos')
+    .delete()
+    .eq('id', checkpointId);
+
+    return {data, error};
+};

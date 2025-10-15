@@ -22,6 +22,29 @@ export const CheckpointStyle = StyleSheet.create({
 
     },
 
+    Button: {
+        backgroundColor: DefaultAppColors.color.defaultGray,
+        width: '100%',
+        height: 65,
+        borderRadius: 20,
+        justifyContent: 'center',
+        borderBlockColor: DefaultAppColors.color.defaultBlack,
+        marginTop: 10,
+    },
+
+    QRInfoText: {
+        marginTop: 10,
+        fontSize: 12,
+        color: '#666',
+        textAlign: 'center'
+    },
+
+    QRLabelText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 10
+    },
+
     CheckPointInfoContainer: {
         width: '40%',
         height: '100%',

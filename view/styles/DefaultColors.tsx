@@ -5,6 +5,6 @@ export const DefaultAppColors = {
         verdeApp: '#6C64C8',
         defaultBlack: '#333333ff',
         defaultGray: '#666666ff',
-        defaultWhite: '#999999ff'
+        defaultWhite: '#ffffff',
     }
 };

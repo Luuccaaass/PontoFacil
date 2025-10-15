@@ -5,7 +5,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import '../styles/TelaLoginStyles'
 import TelaLoginStyles from '../styles/TelaLoginStyles';
 import GlobalStyles from '../styles/GlobalStyles';
-import { getCheckPointInfo, editCheckpointInfo, formatCheckpointQRData } from 'controller/CheckPointController';
+import { getCheckPointInfo, editCheckpointInfo, formatCheckpointQRData, deleteCheckpoint } from 'controller/CheckPointController';
 import QRCode from 'react-native-qrcode-svg';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
@@ -21,7 +21,7 @@ export const EditCheckpoint = ({ navigation, route }: PropsScreenApps<'EditCheck
     const [showQRCode, setShowQRCode] = useState(false);
     const [qrCodeData, setQrCodeData] = useState('');
     const qrCodeRef = useRef(null);
-    const qrData = formatCheckpointQRData(latitude, longitude, checkpointId);
+    const qrData: string = formatCheckpointQRData(latitude, longitude, checkpointId);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,7 +45,6 @@ export const EditCheckpoint = ({ navigation, route }: PropsScreenApps<'EditCheck
     const handleGenerateQRCode = async () => {
         try {
             setQrCodeData(qrData);
-            setShowQRCode(true);
             setTimeout(async () => {
                 try {
                     if (qrCodeRef.current) {
@@ -84,23 +83,39 @@ export const EditCheckpoint = ({ navigation, route }: PropsScreenApps<'EditCheck
     };
 
     const handlePreviewQRCode = () => {
-        const currentData = '${latitude},${longitude},${checkpointId}';
+        const currentData = `${latitude},${longitude},${checkpointId}`;
         setQrCodeData(currentData);
         setShowQRCode(!showQRCode);
     };
 
     const handleEditCheckpoint = async () => {
         const result = await editCheckpointInfo(
-            checkpointId, 
-            identifier, 
-            latitude, 
+            checkpointId,
+            identifier,
+            latitude,
             longitude
         );
-        if (result){
+        if (result) {
             Alert.alert('Sucesso!', 'As informações do ponto foram atualizadas!',
                 [
                     {
-                        onPress:() => navigation.pop(1)
+                        onPress: () => navigation.pop(1)
+                    }
+                ]
+            )
+        }
+        else {
+            Alert.alert('Erro!', 'Não foi possível realizar a operação. Tente novamente!')
+        }
+    };
+
+    const handleDeleteCheckpoint = async() => {
+        const result = await deleteCheckpoint(checkpointId);
+        if (result){
+            Alert.alert('Sucesso!', 'Ponto excluido com sucesso!',
+                [
+                    {
+                        onPress: () => navigation.pop(1)
                     }
                 ]
             )
@@ -122,8 +137,6 @@ export const EditCheckpoint = ({ navigation, route }: PropsScreenApps<'EditCheck
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={GlobalStyles.Container}>
 
-
-                    {/* Identificador */}
                     <TextInput
                         keyboardType='default'
                         style={GlobalStyles.TextInput}
@@ -132,7 +145,6 @@ export const EditCheckpoint = ({ navigation, route }: PropsScreenApps<'EditCheck
                         value={identifier}
                     />
 
-                    {/* Latitude */}
                     <TextInput
                         keyboardType='numeric'
                         style={GlobalStyles.TextInput}
@@ -141,7 +153,6 @@ export const EditCheckpoint = ({ navigation, route }: PropsScreenApps<'EditCheck
                         value={latitude ? latitude.toString() : ''}
                     />
 
-                    {/* Longitude */}
                     <TextInput
                         keyboardType='numeric'
                         style={GlobalStyles.TextInput}
@@ -150,18 +161,12 @@ export const EditCheckpoint = ({ navigation, route }: PropsScreenApps<'EditCheck
                         value={longitude ? longitude.toString() : ''}
                     />
 
-                    {/* QR Code Display */}
                     {showQRCode && qrCodeData && (
                         <View style={CheckpointStyle.QRCodePreview}>
-                            <Text style={{
-                                fontSize: 16,
-                                fontWeight: 'bold',
-                                marginBottom: 10
-                            }}>
+                            <Text style={CheckpointStyle.QRLabelText}>
                                 QR Code do Ponto
                             </Text>
 
-                            {/* QR Code (invisível para captura) */}
                             <View style={{ position: 'absolute', left: -1000 }}>
                                 <QRCode
                                     value={qrCodeData}
@@ -170,23 +175,22 @@ export const EditCheckpoint = ({ navigation, route }: PropsScreenApps<'EditCheck
                                 />
                             </View>
 
-                            {/* QR Code visível para o usuário */}
                             <QRCode
                                 value={qrCodeData}
                                 size={200}
                             />
 
-                            <Text style={{
-                                marginTop: 10,
-                                fontSize: 12,
-                                color: '#666',
-                                textAlign: 'center'
-                            }}>
+                            <Text style={CheckpointStyle.QRInfoText}>
                                 {qrCodeData}
                             </Text>
-
                             <TouchableOpacity
-                                style={[GlobalStyles.Button, { marginTop: 10, backgroundColor: '#666' }]}
+                                style={CheckpointStyle.Button}
+                                onPress={handleGenerateQRCode}
+                            >
+                                <Text style={GlobalStyles.ButtonText}>Baixar QR Code</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={CheckpointStyle.Button}
                                 onPress={() => setShowQRCode(false)}
                             >
                                 <Text style={GlobalStyles.ButtonText}>Fechar</Text>
@@ -194,15 +198,6 @@ export const EditCheckpoint = ({ navigation, route }: PropsScreenApps<'EditCheck
                         </View>
                     )}
 
-                    {/* Botão para gerar e salvar QR Code */}
-                    <TouchableOpacity
-                        style={GlobalStyles.Button}
-                        onPress={handleGenerateQRCode}
-                    >
-                        <Text style={GlobalStyles.ButtonText}>Gerar e Salvar QR Code</Text>
-                    </TouchableOpacity>
-
-                    {/* Botão para apenas visualizar QR Code */}
                     <TouchableOpacity
                         style={GlobalStyles.Button}
                         onPress={handlePreviewQRCode}
@@ -212,7 +207,6 @@ export const EditCheckpoint = ({ navigation, route }: PropsScreenApps<'EditCheck
                         </Text>
                     </TouchableOpacity>
 
-                    {/* Botão para atualizar ponto */}
                     <TouchableOpacity
                         style={GlobalStyles.Button}
                         onPress={handleEditCheckpoint}
@@ -220,6 +214,12 @@ export const EditCheckpoint = ({ navigation, route }: PropsScreenApps<'EditCheck
                         <Text style={GlobalStyles.ButtonText}>Atualizar ponto</Text>
                     </TouchableOpacity>
 
+                    <TouchableOpacity
+                        style={GlobalStyles.Button}
+                        onPress={handleDeleteCheckpoint}
+                    >
+                        <Text style={GlobalStyles.ButtonText}>Excluir ponto</Text>
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
         </KeyboardAwareScrollView>
